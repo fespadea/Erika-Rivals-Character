@@ -2,7 +2,7 @@
 
 This file is the nitty-gritty docs of the MunoPhone Touch - it's a list of all
 the different variables, side features, etc. that you as a character dev can
-take advantage of.
+take advantage of. Hi.
 
 */
 
