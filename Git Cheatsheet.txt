@@ -1,0 +1,47 @@
+Checkout branch:
+git checkout <branchname> //existing branch
+git checkout -b <branchname> //new branch
+
+Update remote branches:
+git fetch --all
+
+See changed files in current branch:
+git status
+
+See changes in changed files:
+git diff
+
+Stage changes for next commit:
+git add <filepath> //single file
+git add <directorypath> //all files in directory
+git add . //all files in current directory
+
+Commit changes:
+git commit -m <message>
+
+Push changes to remote:
+git push origin <branchname>
+
+Get changes from remote:
+git pull
+
+Started working in wrong branch, want your changes in right branch:
+git stash //resets your branch, changes put in a 'stash'
+git checkout <branchname> //see above
+git stash pop //reapplies changes from most recent stash
+
+See commit history:
+git log //press 'q' to exit it
+
+Fix error in commit message:
+git commit --amend //opens editor for most recent commit
+
+Merge changes into main branch:
+//make sure <targetbranch> is pulled first with `git pull`
+git merge --no-ff <sourcebranchname> //make sure you are on <targetbranch> and <sourcebranch> has commits
+
+Exit Vim editor for merge commit message - ":q" enter
+
+Merge main branch to your branch:
+//make sure <sourcebranch> is pulled first with `git pull`
+git merge <sourcebranchname> //make sure you are on <targetbranch> and <sourcebranch> has commits
