@@ -5,3 +5,6 @@ ignores_walls = true;
 free = false;
 tethered_id = noone;
 chain_length = player_id.chain_length * 16;
+chain_segments = player_id.chain_segments;
+owner_true_y = 0;
+tethered_true_y = 0;

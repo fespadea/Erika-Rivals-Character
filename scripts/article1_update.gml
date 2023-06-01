@@ -1,4 +1,6 @@
-if (point_distance(player_id.x, player_id.y, tethered_id.x, tethered_id.y) > chain_length) {
+owner_true_y = player_id.y - player_id.char_height / 2;
+tethered_true_y = tethered_id.y - tethered_id.char_height / 2;
+if (point_distance(player_id.x, owner_true_y, tethered_id.x, tethered_true_y) > chain_length) {
 	instance_destroy(self);
 }
 

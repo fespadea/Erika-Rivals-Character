@@ -53,3 +53,5 @@ sprite_change_offset("phone_open", 32, 64);
 sprite_change_offset("plat", 64, 94);
 
 sprite_change_offset("nspecial_proj", 64, 94);
+
+sprite_change_offset("chain_link", 0, 2);
