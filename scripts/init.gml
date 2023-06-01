@@ -180,7 +180,8 @@ air_dodge_sound     = asset_get("sfx_quick_dodge");
 bubble_x = 0;
 bubble_y = 8;
 
-
+chain_length = 12;
+my_chains = [];
 
 // MunoPhone Touch code - don't touch
 // should be at BOTTOM of file, but above any #define lines

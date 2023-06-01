@@ -13,3 +13,9 @@ if my_hitboxID.attack == AT_NSPECIAL && !has_updated_beam_kb{
 if my_hitboxID.attack == AT_NSPECIAL && my_hitboxID.hbox_num == 2 && my_hitboxID.hitpause > 15{
 	sound_play(sfx_dbfz_hit_broken);
 }
+
+if my_hitboxID.attack == AT_FSPECIAL {
+	new_chain = instance_create(x, y, "obj_article1");
+	my_chains[0] = new_chain.id;
+	new_chain.tethered_id = hit_player_obj;
+}
