@@ -3,7 +3,7 @@ sprite_change_offset("bighurt", 32, 62);
 sprite_change_offset("hurt", 32, 62);
 sprite_change_offset("crouch", 23, 38);
 sprite_change_offset("walk", 32, 62);
-sprite_change_offset("walkturn", 32, 62);
+sprite_change_offset("walkturn", 10, 38);
 sprite_change_offset("dash", 32, 62);
 sprite_change_offset("dashstart", 32, 62);
 sprite_change_offset("dashstop", 32, 62);
