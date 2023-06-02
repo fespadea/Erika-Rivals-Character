@@ -1,151 +1,69 @@
-owner_true_y = player_id.y - player_id.char_height / 2;
-tethered_true_y = tethered_id.y - tethered_id.char_height / 2;
-if (point_distance(player_id.x, owner_true_y, tethered_id.x, tethered_true_y) > chain_length) {
-	instance_destroy(self);
+// article 1 update
+
+ownerX = owner_id.x;
+ownerY = owner_id.y - owner_id.char_height / 2;
+tetheredX = tethered_id.x;
+tetheredY = tethered_id.y - tethered_id.char_height / 2;
+
+dist = point_distance(ownerX, ownerY, tetheredX, tetheredY);
+
+if(dist < normalChainLength){ // calculate A and B in Ax^2 + Bx
+    var calcArcResults = calcArc(ownerX, ownerY, tetheredX, tetheredY, normalChainLength);
+    A = calcArcResults;
+    B = calcArcResults;
+    arcLength = normalChainLength;
+} else{
+    A = 0;
+    B = (tetheredY - ownerY) / (tetheredX - ownerX);
+    arcLength = dist;
+}
+xShift = ownerX;
+yShift = ownerY;
+
+for(var chainIndex = 0; chainIndex < numChainSegments; chainIndex++){
+    chainArcLength = arcLength / numChainSegments * chainIndex + chainLinkWidth/2;
+    
 }
 
-/*if (init == 0) {
-	hsp = lengthdir_x(player_id.up_b_speed, player_id.up_b_dir);
-	vsp = lengthdir_y(player_id.up_b_speed, player_id.up_b_dir);
-	var angle = player_id.up_b_dir;
-	if (angle == 90 || angle == 270) {
-		spr_dir = player_id.spr_dir;
-		angle = (angle + 90 * (1 - spr_dir)) % 360;
-	}
-	if (angle > 90 && angle < 270) {
-		angle = (180 + angle) % 360;
-		spr_dir = -1;
-	}
-	image_angle = angle;
 
-	if (x > stage_x && x < room_width - stage_x && y > stage_y) {
-		spawned_in_floor = true;
-	}
-	
-	for (i = 0; i < 6; i++) {
-		var temp_x = 62 - player_id.hornet_x_offset + 8 * i;
-		var temp_y = -60 + player_id.hornet_y_offset;
-		var final_x = temp_x * dcos(angle * spr_dir) - temp_y * dsin(angle * spr_dir);
-		var final_y = temp_x * dsin(angle * spr_dir) + temp_y * dcos(angle * spr_dir);
-		var hitbox = create_hitbox(AT_USPECIAL, 1, x + round(final_x) * spr_dir, y - round(final_y));
-		hitbox.hsp = hsp;
-		hitbox.vsp = vsp;
-		hitbox.kb_angle = angle;
-		hitbox.hornet = self;
-	}
-	
-	init = 1;
-	sound_play(sound_get("hornet_yell_" + string(random_func(0, 2, true) + 1)));
-	sprite_index = sprite_get("hornet");
-	with (asset_get("obj_article1")){
-		if (id != other.id && player_id == other.player_id){
-			active = false;
-		}
-	}
-}
 
-if (x > stage_x && x < room_width - stage_x && y > stage_y && life_timer < spawn_grace_period) {
-	spawned_in_floor = true;
-}
+/* ////////////////////////////////////////////////////////////////////////////////////
+    These functions are used to calculate the arc of the chain.
+    Most of the code is adapted from the python code here: https://stackoverflow.com/questions/48486254/determine-parabola-with-given-arc-length-between-two-known-points
+*/ ////////////////////////////////////////////////////////////////////////////////////
+#define dIFunc(t)
+return sqrt(1 + t * t);
 
-life_timer++;
-invalidation_timer += invalidating;
+#define IFunc(t)
+var rt = sqrt(1 + t * t);
+return 0.5 * (t * rt + ln(t + rt));
 
-if (life_timer % 5 == 0) {
-	image_index = (image_index + 1) % image_number;
-}
+#define sFunc(a, x0, y0)
+var u = y0/x0 + a * x0;
+var l = y0/x0 - a*x0;
+return 0.5 * (IFunc(u) - IFunc(l)) / a;
 
-if (player_id.state_cat == SC_HITSTUN) {
-	active = false;
-	keep_life = true;
-}
-if (player_id.state == PS_AIR_DODGE || player_id.state == PS_PARRY_START) {
-	active = false;
-	if (!keep_life) {
-		invalidation_timer = wall_grace_period;
-	}
-}
+#define dsFunc(a, y0, x0)
+var u = y0/x0 + a*x0;
+var l = y0/x0 - a*x0;
+return 0.5 * (a*x0 * (dIFunc(u) + dIFunc(l)) + IFunc(l) - IFunc(u)) / (a*a);
 
-if (grabbed == 0 && active) {
-	if (hsp > 0 && vsp > 0 && (x >= player_x || y >= player_y)) {
-		grabbed = 1;
-		keep_life = true;
-	}
-	if (hsp < 0 && vsp > 0 && (x <= player_x || y >= player_y)) {
-		grabbed = 1;
-		keep_life = true;
-	}
-	if (hsp < 0 && vsp < 0 && (x <= player_x || y <= player_y)) {
-		grabbed = 1;
-		keep_life = true;
-	}
-	if (hsp > 0 && vsp < 0 && (x >= player_x || y <= player_y)) {
-		grabbed = 1;
-		keep_life = true;
-	}
-	if (hsp > 0 && vsp == 0 && x >= player_x) {
-		grabbed = 1;
-		keep_life = true;
-	}
-	if (hsp < 0 && vsp == 0 && x <= player_x) {
-		grabbed = 1;
-		keep_life = true;
-	}
-	if (hsp == 0 && vsp > 0 && y >= player_y) {
-		grabbed = 1;
-		keep_life = true;
-	}
-	if (hsp == 0 && vsp < 0 && y <= player_y) {
-		grabbed = 1;
-		keep_life = true;
-	}
-}
+#define findCoeff(x0, y0, s0)
+var N = 1000;
+var EPSILON = 0.5;
 
-if (grabbed > 0 && player_id.window == 2 && active) {
-	player_id.window = 3;
-	player_id.window_timer = 0;
-	player_id.x = x - player_id.up_b_knight_x_offset;
-	player_id.hsp = hsp;
-	player_id.y = y + player_id.up_b_knight_y_offset;
-	player_id.vsp = vsp;
-	active = false;
+var guess = y0 / x0;
+for(var i = 0; i < N; i++){
+    var dguess = (sFunc(guess, x0, y0) - s0) / dsFunc(guess, x0, y0);
+    guess -= dguess;
+    if(abs(dguess) <= EPSILON)
+        break;
 }
+var A = guess;
+var B = y0/x0 - a*x0;
 
-if ((y < -50 && vsp < 0) || (y > room_height + 50 && vsp > 0) || (x < -50 && hsp < 0) || (x > room_width + 50 && hsp > 0)) {
-	with(asset_get("pHitBox")) {
-		if (variable_instance_exists(self, "hornet") && hornet == other) {
-			destroyed = true;
-		}
-	}
-	instance_destroy();
-	exit;
-}
+return [A, B];
 
-if (x > stage_x && x < room_width - stage_x && y > stage_y && !spawned_in_floor) {
-	invalidating = 1;
-}
-else if (invalidation_timer < wall_grace_period) {
-	invalidating = 0;
-	invalidation_timer = 0;
-}
 
-if (invalidation_timer >= wall_grace_period && active) {
-	active = false;
-	if (player_id.window == 2) {
-		player_id.window_timer = max(80 + invalidation_timer, player_id.window_timer);
-	}
-}
-
-if (invalidation_timer >= wall_grace_period) {
-	with (asset_get("pHitBox")) {
-		if (variable_instance_exists(self, "hornet") && hornet == other) {
-			destroyed = true;
-		}
-	}
-	vsp++;
-	image_angle = (darctan2(-vsp, hsp) + 90 * (1 - spr_dir)) % 360;
-	//dumb case where hornet going straight up facing right and vsp is 0 so tan gets angry
-	if (spr_dir = 1 && image_angle == -180) {
-		image_angle = 0;
-	}
-}*/
+#define calcArc(x0, y0, x1, y1, S)
+return findCoeff(x1 - x0, y1 - y0, S);
