@@ -103,7 +103,7 @@ beam_newest_hbox = noone;
 idle_anim_speed     = 0.1;
 crouch_anim_speed   = 0.1;
 walk_anim_speed     = 0.125;
-dash_anim_speed     = 0.2;
+dash_anim_speed     = 0.25;
 pratfall_anim_speed = 0.25;
 
 // Jumps
