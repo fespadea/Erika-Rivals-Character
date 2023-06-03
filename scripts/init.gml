@@ -182,6 +182,7 @@ bubble_y = 8;
 
 chain_length = 12;
 chain_segments = 12;
+debug_flag = 0;
 
 // MunoPhone Touch code - don't touch
 // should be at BOTTOM of file, but above any #define lines
