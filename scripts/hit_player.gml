@@ -15,5 +15,5 @@ if my_hitboxID.attack == AT_NSPECIAL && my_hitboxID.hbox_num == 2 && my_hitboxID
 }
 
 if(my_hitboxID.attack == AT_FSPECIAL){
-	instance_create(x, y, "obj_article1");
+	instance_create(x, y, "obj_article1").tethered_id = hit_player_obj;
 }

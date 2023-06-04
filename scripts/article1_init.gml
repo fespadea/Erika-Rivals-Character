@@ -13,3 +13,4 @@ chainLinkWidth = sprite_get_width(chainLinkSprite) * .6;
 numChainSegments = floor(normalChainLength / chainLinkWidth);
 chainSegmentXs = array_create(numChainSegments);
 chainSegmentYs = array_create(numChainSegments);
+chainSegmentAngles = array_create(numChainSegments);
