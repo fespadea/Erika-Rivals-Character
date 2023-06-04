@@ -54,4 +54,4 @@ sprite_change_offset("plat", 64, 94);
 
 sprite_change_offset("nspecial_proj", 64, 94);
 
-sprite_change_offset("chain_link", 0, 2);
+sprite_change_offset("chain_link", sprite_get_width(sprite_get("chain_link"))/2, 0);
