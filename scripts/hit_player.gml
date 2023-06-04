@@ -15,8 +15,14 @@ if my_hitboxID.attack == AT_NSPECIAL && my_hitboxID.hbox_num == 2 && my_hitboxID
 }
 
 if my_hitboxID.attack == AT_FSPECIAL {
+	for (i = 0; i < ds_list_size(my_chains); i++) {
+		curr_chain = my_chains[| i];
+		if (curr_chain.tethered_id == hit_player_obj) {
+			return;
+		}
+	}
 	new_chain = instance_create(x, y, "obj_article1");
-	my_chains[0] = new_chain.id;
+	ds_list_add(my_chains, new_chain);
 	new_chain.tethered_id = hit_player_obj;
 	new_chain.owner_true_y = y - char_height / 2;
 	new_chain.tethered_true_y = hit_player_obj.y - hit_player_obj.char_height / 2;
