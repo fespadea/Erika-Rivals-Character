@@ -102,7 +102,7 @@ beam_newest_hbox = noone;
 // Misc. animation speeds
 idle_anim_speed     = 0.1;
 crouch_anim_speed   = 0.1;
-walk_anim_speed     = 0.125;
+walk_anim_speed     = 0.16;
 dash_anim_speed     = 0.25;
 pratfall_anim_speed = 0.25;
 
