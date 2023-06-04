@@ -8,7 +8,7 @@ if (point_distance(player_id.x, owner_true_y, tethered_id.x, tethered_true_y) >=
 
 if (x_dist == 0) {
     // we divide by x_dist so we need a special case when its 0
-    debug_draw(1, "X positions are equal");
+    debug_draw_text(1, "X positions are equal");
 } else {
     target_val = power(sqrt(sqr(chain_length) - sqr(y_dist)) / abs_x_dist - 1, -0.5);
     guess = target_val / (2 * sqrt(6));
@@ -86,13 +86,13 @@ if (x_dist == 0) {
         start_x = x_guess;
     }
 
-    debug_draw(1, "p1: (" + string(player_id.x) + ", " + string(owner_true_y) + ")");
-    debug_draw(2, "p2: (" + string(tethered_id.x) + ", " + string(tethered_true_y) + ")");
-    debug_draw(3, "distance: " + string(point_distance(player_id.x, owner_true_y, tethered_id.x, tethered_true_y)));
-    debug_draw(4, "a: " + string(a*100) + ", vertex: (" + string(vertex_x) + ", " + string(vertex_y) + ")");
+    debug_draw_text(1, "p1: (" + string(player_id.x) + ", " + string(owner_true_y) + ")");
+    debug_draw_text(2, "p2: (" + string(tethered_id.x) + ", " + string(tethered_true_y) + ")");
+    debug_draw_text(3, "distance: " + string(point_distance(player_id.x, owner_true_y, tethered_id.x, tethered_true_y)));
+    debug_draw_text(4, "a: " + string(a*100) + ", vertex: (" + string(vertex_x) + ", " + string(vertex_y) + ")");
 }
 
-#define debug_draw(ySlot, text)
+#define debug_draw_text(ySlot, text)
 if (debug_flag) {
     draw_debug_text(floor(view_get_xview() + 16), floor(view_get_yview() + view_get_hview() - 16 * ySlot), text);
 }
