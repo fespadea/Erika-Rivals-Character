@@ -39,7 +39,7 @@ yShift = leftY;
 
 for(var chainIndex = 0; chainIndex < numChainSegments; chainIndex++){
     var chainLinkArcLength = arcLength / numChainSegments * (chainIndex + 0.5);
-    var positions = calcPos(A, B, xShift, yShift, chainLinkArcLength);
+    var positions = calcPos(A, B, xShift, yShift, chainLinkArcLength, chainIndex > 0 ? chainSegmentXs[chainIndex-1] - xShift + chainLinkWidth : chainLinkWidth);
     chainSegmentXs[chainIndex] = round(positions[0]);
     chainSegmentYs[chainIndex] = round(positions[1]);
     chainSegmentAngles[chainIndex] = calcAngle(chainSegmentXs[chainIndex], A, B, xShift);
@@ -70,7 +70,7 @@ return 0.5 * (a*x0*(dIFunc(u) + dIFunc(l)) + IFunc(l) - IFunc(u)) / (a*a);
 
 #define findCoeff(x0, y0, s0)
 var N = 10;
-var EPSILON = 0.5;
+var EPSILON = 0.001;
 
 var guess = y0/x0;
 for(var i = 0; i < N; i++){
@@ -101,29 +101,36 @@ var u = 2 * a * x0 + b
 var l = b
 return 0.5 * (IFunc(u) - IFunc(l)) / a
 
-#define findPos(a, b, s0)
-var N = maxChainLength
+#define findPos(a, b, s0, baseGuess)
+var N = maxChainLength;
 
-var guess = round((rightX - leftX) * s0 / arcLength);
+// var guess = round((rightX - leftX) * s0 / arcLength);
+var guess = baseGuess;
 var prevGuess = guess;
 var dArcLength = sFunc2(guess, a, b) - s0;
 var prevDArcLength = dArcLength;
+var jumpAmount = 2;
 for(var i = 0; i < N; i++){
     prevDArcLength = dArcLength;
     prevGuess = guess;
-    guess -= sign(dArcLength);
+    guess -= sign(dArcLength)*jumpAmount;
     dArcLength = sFunc2(guess, a, b) - s0;
     if(prevDArcLength <= dArcLength){
-        break;
+        if(jumpAmount > 1){
+            jumpAmount = round(jumpAmount/2)
+        } else{
+            break;
+        }
     }
 }
+print(i)
 var x0 = prevGuess;
 var y0 = a*x0*x0 + b*x0;
 
 return [x0, y0];
 
-#define calcPos(A, B, xShift, yShift, arcLength)
-var positions = findPos(A, B, arcLength);
+#define calcPos(A, B, xShift, yShift, arcLength, baseGuess)
+var positions = findPos(A, B, arcLength, baseGuess);
 return [positions[0] + xShift, positions[1] + yShift];
 
 // functions to calculate angle at position on arc

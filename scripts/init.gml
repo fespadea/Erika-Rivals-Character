@@ -180,7 +180,7 @@ air_dodge_sound     = asset_get("sfx_quick_dodge");
 bubble_x = 0;
 bubble_y = 8;
 
-DEFAULT_CHAIN_LENGTH = 300;
+DEFAULT_CHAIN_LENGTH = 200;
 DEFAULT_STRETCH_AMOUNT = 100;
 
 // MunoPhone Touch code - don't touch
