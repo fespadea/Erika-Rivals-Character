@@ -8,3 +8,6 @@ chain_length = player_id.chain_length * 16;
 chain_segments = player_id.chain_segments;
 owner_true_y = 0;
 tethered_true_y = 0;
+chain_link_sprite = sprite_get("chain_link");
+chain_link_sprite2 = sprite_get("chain_link2");
+debug_flag = player_id.debug_flag;
