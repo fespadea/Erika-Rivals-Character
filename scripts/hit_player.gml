@@ -15,7 +15,7 @@ if my_hitboxID.attack == AT_NSPECIAL && my_hitboxID.hbox_num == 2 && my_hitboxID
 }
 
 if my_hitboxID.attack == AT_FSPECIAL {
-	for (i = 0; i < ds_list_size(my_chains); i++) {
+	for (var i = 0; i < ds_list_size(my_chains); i++) {
 		curr_chain = my_chains[| i];
 		if (curr_chain.tethered_id == hit_player_obj) {
 			return;
