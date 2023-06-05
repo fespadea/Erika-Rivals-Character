@@ -38,58 +38,47 @@ if(dist < normalChainLength){ // calculate A and B in Ax^2 + Bx
 xShift = leftX;
 yShift = leftY;
 
-// for(var chainIndex = 0; chainIndex < numChainSegments; chainIndex++){
-//     var chainLinkArcLength = arcLength / numChainSegments * (chainIndex + 0.5);
-//     var remainingChain;
-//     var positions;
-//     if(rightX - leftX >= abs(rightY - leftY) && rightX - leftX > numChainSegments*5){
-//         var baseGuess;
-//         if(chainIndex > 0){
-//             var remainingChainSegment = (rightX-chainSegmentXs[chainIndex-1]) / (numChainSegments-chainIndex);
-//             baseGuess = chainSegmentXs[chainIndex-1] - xShift + remainingChainSegment*0.5;
-//         } else{
-//             baseGuess = ((rightX-leftX) / (numChainSegments)) * 0.5;
-//         }
-//         positions = calcPos(A, B, xShift, yShift, chainLinkArcLength, baseGuess);
-//     } else{
-//         var baseGuess;
-//         if(chainIndex > 0){
-//             var left = determineLeft(A, B, chainLinkArcLength);
-//             var remainingChainSegment;
-//             if(left){
-//                 var maxX = determineMaxX(A, B);
-//                 var maxY = determineMaxY(A, B, maxX);
-//                 remainingChainSegment = (maxY-(chainSegmentYs[chainIndex-1]-yShift)) / ((numChainSegments-chainIndex) * ((maxX-(chainSegmentXs[chainIndex-1]-xShift)) / (rightX-chainSegmentXs[chainIndex-1])));
-//             } else{
-//                 remainingChainSegment = (rightY-chainSegmentYs[chainIndex-1]) / (numChainSegments-chainIndex);
-//             }
-//             baseGuess = chainSegmentYs[chainIndex-1]-yShift + remainingChainSegment*0.5;
-//         } else{
-//             var left = determineLeft(A, B, chainLinkArcLength);
-//             var remainingChainSegment;
-//             if(left){
-//                 var maxX = determineMaxX(A, B);
-//                 var maxY = determineMaxY(A, B, maxX);
-//                 remainingChainSegment = maxY / (numChainSegments * (maxX / ((rightX-xShift)-maxX)));
-//             } else{
-//                 remainingChainSegment = (rightY-yShift) / numChainSegments;
-//             }
-//             baseGuess = remainingChainSegment*0.5;
-//         }
-//         positions = calcPosY(A, B, xShift, yShift, chainLinkArcLength, baseGuess);
-//     }
-//     chainSegmentXs[chainIndex] = round(positions[0]);
-//     chainSegmentYs[chainIndex] = round(positions[1]);
-//     chainSegmentAngles[chainIndex] = calcAngle(chainSegmentXs[chainIndex], A, B, xShift);
-// }
-
 var bezPoints = quadToBez(A, B, leftX, leftY, rightX, rightY, xShift);
-for(var chainIndex = 0; chainIndex < numChainSegments; chainIndex++){
-    var t = 1/numChainSegments * (chainIndex + 0.5);
-    var position = bezPointToCart(bezPoints, t);
-    chainSegmentXs[chainIndex] = round(position.x);
-    chainSegmentYs[chainIndex] = round(position.y);
-    chainSegmentAngles[chainIndex] = calcAngle(chainSegmentXs[chainIndex], A, B, xShift);
+if(dist < normalChainLength){
+    var approximationFactor = 4;
+    if(player_id.phone_fast){
+        approximationFactor *= floor(stillLagging);
+        approximationFactor = min(approximationFactor, normalChainLength);
+    }
+    var numMeasurements = ceil(normalChainLength/approximationFactor);
+    var chainLengths = array_create(numMeasurements+1);
+    for(var tIndex = 1; tIndex <= numMeasurements; tIndex++){
+        position = bezPointToCart(bezPoints, tIndex/numMeasurements);
+        chainLengths[tIndex] = sFunc2(position.x-xShift, A, B);
+    }
+    
+    tIndex = 1;
+    for(var chainIndex = 0; chainIndex < numChainSegments; chainIndex++){
+        var chainLinkArcLength = arcLength / numChainSegments * (chainIndex + 0.5);
+        while(chainLengths[tIndex] < chainLinkArcLength){
+            tIndex++;
+        }
+        var overShootProportion = (chainLengths[tIndex]-chainLinkArcLength) / (chainLengths[tIndex]-chainLengths[tIndex-1]);
+        var t = (tIndex-overShootProportion)/numMeasurements;
+        var position = bezPointToCart(bezPoints, t);
+        chainSegmentXs[chainIndex] = round(position.x);
+        chainSegmentYs[chainIndex] = round(position.y);
+        chainSegmentAngles[chainIndex] = calcAngle(chainSegmentXs[chainIndex], A, B, xShift);
+    }
+} else{
+    for(var chainIndex = 0; chainIndex < numChainSegments; chainIndex++){
+        var t = 1/numChainSegments * (chainIndex + 0.5);
+        var position = bezPointToCart(bezPoints, t);
+        chainSegmentXs[chainIndex] = round(position.x);
+        chainSegmentYs[chainIndex] = round(position.y);
+        chainSegmentAngles[chainIndex] = calcAngle(chainSegmentXs[chainIndex], A, B, xShift);
+    }
+}
+
+if(player_id.phone_fast){
+    if(player_id.fps_real < 60 && stillLagging < 200){
+        stillLagging += 0.2;
+    }
 }
 
 /* ////////////////////////////////////////////////////////////////////////////////////
@@ -116,6 +105,10 @@ return 0.5 * (a*x0*(dIFunc(u) + dIFunc(l)) + IFunc(l) - IFunc(u)) / (a*a);
 #define findCoeff(x0, y0, s0)
 var N = 10;
 var EPSILON = 0.001;
+if(player_id.phone_fast){
+    EPSILON *= floor(stillLagging/2);
+    EPSILON = min(EPSILON, 0.1);
+}
 
 var guess = y0/x0;
 for(var i = 0; i < N; i++){
@@ -161,120 +154,10 @@ if(bezPoints.B = "N/A"){
 
 return {x: xVal, y: yVal};
 
-// // functions to calculate a position along an arc with given arc length
-// #define sFunc2(x0, a, b)
-// if(a == 0){
-//     return sqrt(max(sqr(x0) + sqr(b*x0), 0));
-// }
-// var u = 2 * a * x0 + b;
-// var l = b;
-// return 0.5 * (IFunc(u) - IFunc(l)) / a;
-
-// #define findPos(a, b, s0, baseGuess)
-// var N = 10;
-
-// var guess = baseGuess;
-// var prevGuess = guess;
-// var dArcLength = sFunc2(guess, a, b) - s0;
-// var prevDArcLength = dArcLength;
-// var jumpAmount = 2;
-// for(var i = 0; i < N; i++){
-//     prevDArcLength = dArcLength;
-//     prevGuess = guess;
-//     guess -= sign(dArcLength)*jumpAmount;
-//     dArcLength = sFunc2(guess, a, b) - s0;
-//     if(abs(prevDArcLength) <= abs(dArcLength)){
-//         if(jumpAmount > 1){
-//             jumpAmount = round(jumpAmount/2);
-//         } else{
-//             break;
-//         }
-//     }
-// }
-// print(i)
-// var x0 = prevGuess;
-// var y0 = a*x0*x0 + b*x0;
-
-// return [x0, y0];
-
-// #define calcPos(A, B, xShift, yShift, arcLength, baseGuess)
-// var positions = findPos(A, B, arcLength, baseGuess);
-// return [positions[0] + xShift, positions[1] + yShift];
-
-// // functions to calculate a position along an arc with the given arc length but via the y value instead of the x value
-// #define determineX(y0, a, b, left)
-// if(a == 0){
-//     return b == 0 ? 0 : y0/b;
-// }
-// var root = sqr(b) - 4*a*(-y0);
-// if(sign(root) == -1){
-//     return determineMaxY(a, b, determineMaxX(a, b));
-// }
-// var xPos = (-b + sqrt(max(root, 0))) / (2*a);
-// var xNeg = (-b - sqrt(max(root, 0))) / (2*a);
-// return left ? min(xNeg, xPos) : max(xNeg, xPos);
-
-// #define determineMaxX(A, B)
-// return A == 0 ? (leftY < rightY ? rightX-xShift : leftX-xShift) : -B/(2*A);
-
-// #define determineMaxY(A, B, maxX)
-// return maxX == infinity ? max(leftY-yShift, rightY-yShift) : A*sqr(maxX) + B*maxX;
-
-// #define sFunc2Y(y0, a, b, left)
-// if(a == 0){
-//     return b == 0 ? 0 : sqrt(max(sqr(y0/b) + sqr(y0), 0));
-// }
-// var x0 = determineX(y0, a, b, left);
-// var u = 2*a*x0 + b;
-// var l = b;
-// return 0.5 * (IFunc(u) - IFunc(l)) / a;
-
-// #define findPosY(a, b, s0, baseGuess, left)
-// var N = 10;
-
-// var guess = baseGuess;
-// var prevGuess = guess;
-// var dArcLength = sFunc2Y(guess, a, b, left) - s0;
-// var prevDArcLength = dArcLength;
-// var jumpAmount = 2;
-// var maxX = determineMaxX(A, B);
-// var maxY = determineMaxY(A, B, maxX);
-// for(var i = 0; i < N; i++){
-//     prevDArcLength = dArcLength;
-//     prevGuess = guess;
-//     guess -= sign(dArcLength)*jumpAmount*left;
-//     if(guess > maxY){
-//         guess = maxY;
-//     }
-//     dArcLength = sFunc2Y(guess, a, b, left) - s0;
-//     if(abs(prevDArcLength) <= abs(dArcLength)){
-//         if(jumpAmount > 1){
-//             jumpAmount = round(jumpAmount/2);
-//         } else{
-//             break;
-//         }
-//     }
-// }
-// print(i)
-// var y0 = prevGuess;
-// var x0 = determineX(y0, a, b, left);
-
-// return [x0, y0];
-
-// #define determineLeft(a, b, arcLength) // determine if our goal position is to the left or right of the max
-// var maxX = determineMaxX(a, b);
-// return sign(round((sFunc2(maxX, a, b) - arcLength)/15));
-
-// #define calcPosY(A, B, xShift, yShift, arcLength, baseGuess)
-// var left = determineLeft(A, B, arcLength)
-// var positions;
-// if(left == 0){
-//     var maxX = determineMaxX(A, B);
-//     positions = [maxX, determineMaxY(A, B, maxX)];
-// } else{
-//     positions = findPosY(A, B, arcLength, baseGuess, left);
-// }
-// return [positions[0] + xShift, positions[1] + yShift];
+#define sFunc2(x0, a, b)
+var u = 2 * a * x0 + b;
+var l = b;
+return 0.5 * (IFunc(u) - IFunc(l)) / a;
 
 
 // functions to calculate angle at position on arc

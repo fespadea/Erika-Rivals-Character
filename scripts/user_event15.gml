@@ -79,7 +79,7 @@ phone.uses_shader = false;
 phone.extra_top_size = 0;
 
 // Set to true and the "Fast Graphics" feature will be enabled; see _readme.gml.
-phone.supports_fast_graphics = false;
+phone.supports_fast_graphics = true;
 
 // Set to true and the phone will NOT activate Fast Fraphics when FPS gets low.
 phone.dont_fast = false;

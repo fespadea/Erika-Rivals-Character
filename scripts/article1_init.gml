@@ -15,3 +15,6 @@ numChainSegments = ceil(normalChainLength / chainLinkWidth);
 chainSegmentXs = array_create(numChainSegments);
 chainSegmentYs = array_create(numChainSegments);
 chainSegmentAngles = array_create(numChainSegments);
+
+// for detecting if the chain needs to be simpler
+stillLagging = 1;
