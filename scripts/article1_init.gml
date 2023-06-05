@@ -1,5 +1,6 @@
 can_be_grounded = false;
 ignores_walls = true;
+uses_shader = true;
 with (player_id) {
     other.tethered_id = hit_player_obj;
 }

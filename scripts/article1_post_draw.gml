@@ -1,5 +1,5 @@
 for(var i = 0; i < chain_segments; i++) {
-    draw_sprite_ext(i < end_iter ? chain_link_sprite : chain_link_sprite2, 0, chain_x_positions[i], chain_y_positions[i], 1.2 * chain_length / chain_segments / sprite_get_width(chain_link_sprite), 1, chain_angles[i], c_white, 1);
+    draw_sprite_ext(i < end_iter ? chain_link_sprite : chain_link_sprite2, 0, chain_x_positions[i], chain_y_positions[i], 1.4 * chain_length / chain_segments / sprite_get_width(chain_link_sprite), 1, chain_angles[i], c_white, 1);
 }
 
 debug_draw_text(1, "p1: (" + string(player_id.x) + ", " + string(owner_true_y) + ")");
