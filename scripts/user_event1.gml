@@ -3,8 +3,7 @@ var abs_x_dist = abs(x_dist);
 var y_dist = owner_true_y - tethered_true_y;
 
 if (x_dist == 0) {
-    // we divide by x_dist so we need a special case when its 0
-    print_debug("X positions are equal");
+    handle_vertical(y_dist);
 } else {
     var target_val = power(sqrt(sqr(chain_length) - sqr(y_dist)) / abs_x_dist - 1, -0.5);
     var guess = target_val / (2 * sqrt(6));
@@ -18,7 +17,7 @@ if (x_dist == 0) {
     }
     var a = -guess * abs_x_dist;
     if(abs(a) < 0.05) {
-        exit; // we will get a sqrt negative number error because the vertex will be millions of units away from the players
+        handle_vertical(y_dist);
     }
 
     var xv_guess = -abs_x_dist / 2;
@@ -62,9 +61,11 @@ if (x_dist == 0) {
         var left_y = catenary_with_offset(start_x, a, vertex_x, vertex_y);
         var right_y = catenary_with_offset(x_guess, a, vertex_x, vertex_y);
         var segment_angle = darctan2(right_y - left_y, -(x_guess - start_x)) + 180;
-		chain_x_positions[i] = start_x;
-		chain_y_positions[i] = left_y;
-		chain_angles[i] = segment_angle;
+        chain_rendering_triples[i] = {
+            x : start_x,
+            y : left_y,
+            angle : segment_angle
+        };
         start_x = x_guess;
     }
     start_x = right_x;
@@ -82,9 +83,11 @@ if (x_dist == 0) {
         var left_y = catenary_with_offset(x_guess, a, vertex_x, vertex_y);
         var right_y = catenary_with_offset(start_x, a, vertex_x, vertex_y);
         var segment_angle = darctan2(right_y - left_y, -(start_x - x_guess)) + 180;
-		chain_x_positions[i] = start_x;
-		chain_y_positions[i] = right_y;
-		chain_angles[i] = segment_angle;
+        chain_rendering_triples[i] = {
+            x : start_x,
+            y : right_y,
+            angle : segment_angle
+        };
         start_x = x_guess;
     }
 }
@@ -120,15 +123,41 @@ return catenary(x_coord, a_val) - catenary(x_coord + x_range, a_val) - target;
 return sinh(x_coord / a_val) - sinh((x_range + x_coord) / a_val);
 
 #define arclength(x_coord, a_val, x_offset)
-sqr_val = sqr(sinh((x_coord - x_offset) / a_val));
+var sqr_val = sqr(sinh((x_coord - x_offset) / a_val));
 if (sqr_val + 1 < 0) {
     return -1;
 }
 return -a_val * sqrt(sqr_val + 1) * tanh((x_offset - x_coord) / a_val);
 
 #define arclength_derivative(x_coord, a_val, x_offset)
-sqr_val = sqr(sinh((x_coord - x_offset) / a_val));
+var sqr_val = sqr(sinh((x_coord - x_offset) / a_val));
 if (sqr_val + 1 < 0) {
     return -1;
 }
 return sqrt(sqr_val + 1);
+
+#define handle_vertical(y_dist)
+var length_per_chain = chain_length / chain_segments;
+var links_not_overlap = floor(abs(y_dist / length_per_chain));
+var links_overlap = chain_segments - links_not_overlap;
+var links_overlap_left = ceil(links_overlap / 2);
+var links_overlap_right = links_overlap - links_overlap_left;
+var higher_player_y = y_dist > 0 ? tethered_true_y : owner_true_y;
+var lower_player_y = y_dist > 0 ? owner_true_y : tethered_true_y;
+for (var i = 0; i < links_not_overlap + links_overlap_left; i++) {
+    var render_y = higher_player_y + i * length_per_chain;
+    chain_rendering_triples[i] = {
+        x : player_id.x,
+        y : render_y,
+        angle : 270
+    };
+}
+end_iter = links_not_overlap + links_overlap_left;
+for (var i = chain_segments - 1; i >= end_iter; i--) {
+    var render_y = lower_player_y + (chain_segments - i - 1) * length_per_chain;
+    chain_rendering_triples[i] = {
+        x : player_id.x,
+        y : render_y,
+        angle : 90
+    };
+}
