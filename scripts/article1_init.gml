@@ -10,3 +10,4 @@ chain_segments = player_id.chain_segments;
 chain_link_sprite = sprite_get("chain_link");
 chain_link_sprite2 = sprite_get("chain_link2");
 debug_flag = player_id.debug_flag;
+user_event(1);

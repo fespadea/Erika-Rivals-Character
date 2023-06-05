@@ -23,7 +23,4 @@ if my_hitboxID.attack == AT_FSPECIAL {
 	}
 	new_chain = instance_create(x, y, "obj_article1");
 	ds_list_add(my_chains, new_chain);
-	new_chain.tethered_id = hit_player_obj;
-	new_chain.owner_true_y = y - char_height / 2;
-	new_chain.tethered_true_y = hit_player_obj.y - hit_player_obj.char_height / 2;
 }
