@@ -78,6 +78,8 @@ if(dist < normalChainLength){
 if(player_id.phone_fast){
     if(player_id.fps_real < 60 && stillLagging < 200){
         stillLagging += 0.2;
+    } else{
+        stillLagging = floor(stillLagging);
     }
 }
 
