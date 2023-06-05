@@ -38,49 +38,65 @@ if(dist < normalChainLength){ // calculate A and B in Ax^2 + Bx
 xShift = leftX;
 yShift = leftY;
 
+// for(var chainIndex = 0; chainIndex < numChainSegments; chainIndex++){
+//     var chainLinkArcLength = arcLength / numChainSegments * (chainIndex + 0.5);
+//     var remainingChain;
+//     var positions;
+//     if(rightX - leftX >= abs(rightY - leftY) && rightX - leftX > numChainSegments*5){
+//         var baseGuess;
+//         if(chainIndex > 0){
+//             var remainingChainSegment = (rightX-chainSegmentXs[chainIndex-1]) / (numChainSegments-chainIndex);
+//             baseGuess = chainSegmentXs[chainIndex-1] - xShift + remainingChainSegment*0.5;
+//         } else{
+//             baseGuess = ((rightX-leftX) / (numChainSegments)) * 0.5;
+//         }
+//         positions = calcPos(A, B, xShift, yShift, chainLinkArcLength, baseGuess);
+//     } else{
+//         var baseGuess;
+//         if(chainIndex > 0){
+//             var left = determineLeft(A, B, chainLinkArcLength);
+//             var remainingChainSegment;
+//             if(left){
+//                 var maxX = determineMaxX(A, B);
+//                 var maxY = determineMaxY(A, B, maxX);
+//                 remainingChainSegment = (maxY-(chainSegmentYs[chainIndex-1]-yShift)) / ((numChainSegments-chainIndex) * ((maxX-(chainSegmentXs[chainIndex-1]-xShift)) / (rightX-chainSegmentXs[chainIndex-1])));
+//             } else{
+//                 remainingChainSegment = (rightY-chainSegmentYs[chainIndex-1]) / (numChainSegments-chainIndex);
+//             }
+//             baseGuess = chainSegmentYs[chainIndex-1]-yShift + remainingChainSegment*0.5;
+//         } else{
+//             var left = determineLeft(A, B, chainLinkArcLength);
+//             var remainingChainSegment;
+//             if(left){
+//                 var maxX = determineMaxX(A, B);
+//                 var maxY = determineMaxY(A, B, maxX);
+//                 remainingChainSegment = maxY / (numChainSegments * (maxX / ((rightX-xShift)-maxX)));
+//             } else{
+//                 remainingChainSegment = (rightY-yShift) / numChainSegments;
+//             }
+//             baseGuess = remainingChainSegment*0.5;
+//         }
+//         positions = calcPosY(A, B, xShift, yShift, chainLinkArcLength, baseGuess);
+//     }
+//     chainSegmentXs[chainIndex] = round(positions[0]);
+//     chainSegmentYs[chainIndex] = round(positions[1]);
+//     chainSegmentAngles[chainIndex] = calcAngle(chainSegmentXs[chainIndex], A, B, xShift);
+// }
+
+var chainLinkArcLength = (arcLength / numChainSegments)*0.5;
+var xStart = leftX;
+var yStart = leftY;
+var arcProgress = arcLength;
 for(var chainIndex = 0; chainIndex < numChainSegments; chainIndex++){
-    var chainLinkArcLength = arcLength / numChainSegments * (chainIndex + 0.5);
-    var remainingChain;
-    var positions;
-    if(rightX - leftX >= abs(rightY - leftY) && rightX - leftX > numChainSegments*5){
-        var baseGuess;
-        if(chainIndex > 0){
-            var remainingChainSegment = (rightX-chainSegmentXs[chainIndex-1]) / (numChainSegments-chainIndex);
-            baseGuess = chainSegmentXs[chainIndex-1] - xShift + remainingChainSegment*0.5;
-        } else{
-            baseGuess = ((rightX-leftX) / (numChainSegments)) * 0.5;
-        }
-        positions = calcPos(A, B, xShift, yShift, chainLinkArcLength, baseGuess);
-    } else{
-        var baseGuess;
-        if(chainIndex > 0){
-            var left = determineLeft(A, B, chainLinkArcLength);
-            var remainingChainSegment;
-            if(left){
-                var maxX = determineMaxX(A, B);
-                var maxY = determineMaxY(A, B, maxX);
-                remainingChainSegment = (maxY-(chainSegmentYs[chainIndex-1]-yShift)) / ((numChainSegments-chainIndex) * ((maxX-(chainSegmentXs[chainIndex-1]-xShift)) / (rightX-chainSegmentXs[chainIndex-1])));
-            } else{
-                remainingChainSegment = (rightY-chainSegmentYs[chainIndex-1]) / (numChainSegments-chainIndex);
-            }
-            baseGuess = chainSegmentYs[chainIndex-1]-yShift + remainingChainSegment*0.5;
-        } else{
-            var left = determineLeft(A, B, chainLinkArcLength);
-            var remainingChainSegment;
-            if(left){
-                var maxX = determineMaxX(A, B);
-                var maxY = determineMaxY(A, B, maxX);
-                remainingChainSegment = maxY / (numChainSegments * (maxX / ((rightX-xShift)-maxX)));
-            } else{
-                remainingChainSegment = (rightY-yShift) / numChainSegments;
-            }
-            baseGuess = remainingChainSegment*0.5;
-        }
-        positions = calcPosY(A, B, xShift, yShift, chainLinkArcLength, baseGuess);
-    }
+    var positions = findPosOnQuad(A, B, xStart, yStart, xShift, chainLinkArcLength);
     chainSegmentXs[chainIndex] = round(positions[0]);
     chainSegmentYs[chainIndex] = round(positions[1]);
     chainSegmentAngles[chainIndex] = calcAngle(chainSegmentXs[chainIndex], A, B, xShift);
+    arcProgress = arcLength - sFunc2(chainSegmentXs[chainIndex]-xShift, A, B);
+    print(arcProgress)
+    chainLinkArcLength = arcProgress / (numChainSegments-chainIndex);
+    xStart = chainSegmentXs[chainIndex];
+    yStart = chainSegmentYs[chainIndex];
 }
 
 
@@ -128,6 +144,13 @@ return [A, B];
 #define calcArc(x0, y0, x1, y1, S)
 return findCoeff(x1 - x0, y1 - y0, S);
 
+#define findPosOnQuad(A, B, xStart, yStart, xShift, length)
+var slope = calcSlope(xStart, A, B, xShift);
+var xMovement = length/2 / sqrt(1 + sqr(slope));
+slope = calcSlope(xStart + xMovement, A, B, xShift);
+xMovement = length / sqrt(1 + sqr(slope));
+var yMovement = slope*xMovement;
+return [xStart + xMovement, yStart + yMovement];
 
 // functions to calculate a position along an arc with given arc length
 #define sFunc2(x0, a, b)
@@ -243,6 +266,7 @@ if(left == 0){
     positions = findPosY(A, B, arcLength, baseGuess, left);
 }
 return [positions[0] + xShift, positions[1] + yShift];
+
 
 // functions to calculate angle at position on arc
 #define calcSlope(x0, A, B, xShift)
