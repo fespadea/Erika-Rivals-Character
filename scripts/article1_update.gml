@@ -24,8 +24,8 @@ if(abs(rightY - leftY) < 1){
 
 if(dist < normalChainLength){ // calculate A and B in Ax^2 + Bx
     var calcArcResults = calcArc(leftX, leftY, rightX, rightY, normalChainLength);
-    A = calcArcResults[0];
-    B = calcArcResults[1];
+    A = calcArcResults.A;
+    B = calcArcResults.B;
     arcLength = normalChainLength;
 } else if(dist < maxChainLength){
     A = 0;
@@ -83,22 +83,14 @@ yShift = leftY;
 //     chainSegmentAngles[chainIndex] = calcAngle(chainSegmentXs[chainIndex], A, B, xShift);
 // }
 
-var chainLinkArcLength = (arcLength / numChainSegments)*0.5;
-var xStart = leftX;
-var yStart = leftY;
-var arcProgress = arcLength;
+var bezPoints = quadToBez(A, B, leftX, leftY, rightX, rightY, xShift);
 for(var chainIndex = 0; chainIndex < numChainSegments; chainIndex++){
-    var positions = findPosOnQuad(A, B, xStart, yStart, xShift, chainLinkArcLength);
-    chainSegmentXs[chainIndex] = round(positions[0]);
-    chainSegmentYs[chainIndex] = round(positions[1]);
+    var t = 1/numChainSegments * (chainIndex + 0.5);
+    var position = bezPointToCart(bezPoints, t);
+    chainSegmentXs[chainIndex] = round(position.x);
+    chainSegmentYs[chainIndex] = round(position.y);
     chainSegmentAngles[chainIndex] = calcAngle(chainSegmentXs[chainIndex], A, B, xShift);
-    arcProgress = arcLength - sFunc2(chainSegmentXs[chainIndex]-xShift, A, B);
-    print(arcProgress)
-    chainLinkArcLength = arcProgress / (numChainSegments-chainIndex);
-    xStart = chainSegmentXs[chainIndex];
-    yStart = chainSegmentYs[chainIndex];
 }
-
 
 /* ////////////////////////////////////////////////////////////////////////////////////
     These functions are used to calculate the arc of the chain.
@@ -138,134 +130,151 @@ for(var i = 0; i < N; i++){
 var A = -abs(guess);
 var B = y0/x0 - A*x0;
 
-return [A, B];
+return {A: A, B: B};
 
 
 #define calcArc(x0, y0, x1, y1, S)
 return findCoeff(x1 - x0, y1 - y0, S);
 
-#define findPosOnQuad(A, B, xStart, yStart, xShift, length)
-var slope = calcSlope(xStart, A, B, xShift);
-var xMovement = length/2 / sqrt(1 + sqr(slope));
-slope = calcSlope(xStart + xMovement, A, B, xShift);
-xMovement = length / sqrt(1 + sqr(slope));
-var yMovement = slope*xMovement;
-return [xStart + xMovement, yStart + yMovement];
-
-// functions to calculate a position along an arc with given arc length
-#define sFunc2(x0, a, b)
-if(a == 0){
-    return sqrt(max(sqr(x0) + sqr(b*x0), 0));
+#define quadToBez(A, B, leftX, leftY, rightX, rightY, xShift)
+if(A == 0){
+    return {A: {x: leftX, y: leftY}, B: "N/A", C: {x: rightX, y: rightY}};
 }
-var u = 2 * a * x0 + b;
-var l = b;
-return 0.5 * (IFunc(u) - IFunc(l)) / a;
+var leftSlope = calcSlope(leftX, A, B, xShift);
+var rightSlope = calcSlope(rightX, A, B, xShift);
 
-#define findPos(a, b, s0, baseGuess)
-var N = 10;
+var controlX = (rightY + leftSlope*leftX - leftY - rightSlope*rightX) / (leftSlope - rightSlope);
+var controlY = leftSlope*(controlX - leftX) + leftY;
 
-var guess = baseGuess;
-var prevGuess = guess;
-var dArcLength = sFunc2(guess, a, b) - s0;
-var prevDArcLength = dArcLength;
-var jumpAmount = 2;
-for(var i = 0; i < N; i++){
-    prevDArcLength = dArcLength;
-    prevGuess = guess;
-    guess -= sign(dArcLength)*jumpAmount;
-    dArcLength = sFunc2(guess, a, b) - s0;
-    if(abs(prevDArcLength) <= abs(dArcLength)){
-        if(jumpAmount > 1){
-            jumpAmount = round(jumpAmount/2);
-        } else{
-            break;
-        }
-    }
-}
-print(i)
-var x0 = prevGuess;
-var y0 = a*x0*x0 + b*x0;
+return {A: {x: leftX, y: leftY}, B: {x: controlX, y: controlY}, C: {x: rightX, y: rightY}};
 
-return [x0, y0];
-
-#define calcPos(A, B, xShift, yShift, arcLength, baseGuess)
-var positions = findPos(A, B, arcLength, baseGuess);
-return [positions[0] + xShift, positions[1] + yShift];
-
-// functions to calculate a position along an arc with the given arc length but via the y value instead of the x value
-#define determineX(y0, a, b, left)
-if(a == 0){
-    return b == 0 ? 0 : y0/b;
-}
-var root = sqr(b) - 4*a*(-y0);
-if(sign(root) == -1){
-    return determineMaxY(a, b, determineMaxX(a, b));
-}
-var xPos = (-b + sqrt(max(root, 0))) / (2*a);
-var xNeg = (-b - sqrt(max(root, 0))) / (2*a);
-return left ? min(xNeg, xPos) : max(xNeg, xPos);
-
-#define determineMaxX(A, B)
-return A == 0 ? (leftY < rightY ? rightX-xShift : leftX-xShift) : -B/(2*A);
-
-#define determineMaxY(A, B, maxX)
-return maxX == infinity ? max(leftY-yShift, rightY-yShift) : A*sqr(maxX) + B*maxX;
-
-#define sFunc2Y(y0, a, b, left)
-if(a == 0){
-    return b == 0 ? 0 : sqrt(max(sqr(y0/b) + sqr(y0), 0));
-}
-var x0 = determineX(y0, a, b, left);
-var u = 2*a*x0 + b;
-var l = b;
-return 0.5 * (IFunc(u) - IFunc(l)) / a;
-
-#define findPosY(a, b, s0, baseGuess, left)
-var N = 10;
-
-var guess = baseGuess;
-var prevGuess = guess;
-var dArcLength = sFunc2Y(guess, a, b, left) - s0;
-var prevDArcLength = dArcLength;
-var jumpAmount = 2;
-var maxX = determineMaxX(A, B);
-var maxY = determineMaxY(A, B, maxX);
-for(var i = 0; i < N; i++){
-    prevDArcLength = dArcLength;
-    prevGuess = guess;
-    guess -= sign(dArcLength)*jumpAmount*left;
-    if(guess > maxY){
-        guess = maxY;
-    }
-    dArcLength = sFunc2Y(guess, a, b, left) - s0;
-    if(abs(prevDArcLength) <= abs(dArcLength)){
-        if(jumpAmount > 1){
-            jumpAmount = round(jumpAmount/2);
-        } else{
-            break;
-        }
-    }
-}
-print(i)
-var y0 = prevGuess;
-var x0 = determineX(y0, a, b, left);
-
-return [x0, y0];
-
-#define determineLeft(a, b, arcLength) // determine if our goal position is to the left or right of the max
-var maxX = determineMaxX(a, b);
-return sign(round((sFunc2(maxX, a, b) - arcLength)/15));
-
-#define calcPosY(A, B, xShift, yShift, arcLength, baseGuess)
-var left = determineLeft(A, B, arcLength)
-var positions;
-if(left == 0){
-    var maxX = determineMaxX(A, B);
-    positions = [maxX, determineMaxY(A, B, maxX)];
+#define bezPointToCart(bezPoints, t)
+var xVal;
+var yVal;
+if(bezPoints.B = "N/A"){
+    xVal = (1-t)*bezPoints.A.x + t*bezPoints.C.x;
+    yVal = (1-t)*bezPoints.A.y + t*bezPoints.C.y;
 } else{
-    positions = findPosY(A, B, arcLength, baseGuess, left);
+    xVal = sqr(1-t)*bezPoints.A.x + 2*(1-t)*t*bezPoints.B.x + sqr(t)*bezPoints.C.x;
+    yVal = sqr(1-t)*bezPoints.A.y + 2*(1-t)*t*bezPoints.B.y + sqr(t)*bezPoints.C.y;
 }
-return [positions[0] + xShift, positions[1] + yShift];
+
+return {x: xVal, y: yVal};
+
+// // functions to calculate a position along an arc with given arc length
+// #define sFunc2(x0, a, b)
+// if(a == 0){
+//     return sqrt(max(sqr(x0) + sqr(b*x0), 0));
+// }
+// var u = 2 * a * x0 + b;
+// var l = b;
+// return 0.5 * (IFunc(u) - IFunc(l)) / a;
+
+// #define findPos(a, b, s0, baseGuess)
+// var N = 10;
+
+// var guess = baseGuess;
+// var prevGuess = guess;
+// var dArcLength = sFunc2(guess, a, b) - s0;
+// var prevDArcLength = dArcLength;
+// var jumpAmount = 2;
+// for(var i = 0; i < N; i++){
+//     prevDArcLength = dArcLength;
+//     prevGuess = guess;
+//     guess -= sign(dArcLength)*jumpAmount;
+//     dArcLength = sFunc2(guess, a, b) - s0;
+//     if(abs(prevDArcLength) <= abs(dArcLength)){
+//         if(jumpAmount > 1){
+//             jumpAmount = round(jumpAmount/2);
+//         } else{
+//             break;
+//         }
+//     }
+// }
+// print(i)
+// var x0 = prevGuess;
+// var y0 = a*x0*x0 + b*x0;
+
+// return [x0, y0];
+
+// #define calcPos(A, B, xShift, yShift, arcLength, baseGuess)
+// var positions = findPos(A, B, arcLength, baseGuess);
+// return [positions[0] + xShift, positions[1] + yShift];
+
+// // functions to calculate a position along an arc with the given arc length but via the y value instead of the x value
+// #define determineX(y0, a, b, left)
+// if(a == 0){
+//     return b == 0 ? 0 : y0/b;
+// }
+// var root = sqr(b) - 4*a*(-y0);
+// if(sign(root) == -1){
+//     return determineMaxY(a, b, determineMaxX(a, b));
+// }
+// var xPos = (-b + sqrt(max(root, 0))) / (2*a);
+// var xNeg = (-b - sqrt(max(root, 0))) / (2*a);
+// return left ? min(xNeg, xPos) : max(xNeg, xPos);
+
+// #define determineMaxX(A, B)
+// return A == 0 ? (leftY < rightY ? rightX-xShift : leftX-xShift) : -B/(2*A);
+
+// #define determineMaxY(A, B, maxX)
+// return maxX == infinity ? max(leftY-yShift, rightY-yShift) : A*sqr(maxX) + B*maxX;
+
+// #define sFunc2Y(y0, a, b, left)
+// if(a == 0){
+//     return b == 0 ? 0 : sqrt(max(sqr(y0/b) + sqr(y0), 0));
+// }
+// var x0 = determineX(y0, a, b, left);
+// var u = 2*a*x0 + b;
+// var l = b;
+// return 0.5 * (IFunc(u) - IFunc(l)) / a;
+
+// #define findPosY(a, b, s0, baseGuess, left)
+// var N = 10;
+
+// var guess = baseGuess;
+// var prevGuess = guess;
+// var dArcLength = sFunc2Y(guess, a, b, left) - s0;
+// var prevDArcLength = dArcLength;
+// var jumpAmount = 2;
+// var maxX = determineMaxX(A, B);
+// var maxY = determineMaxY(A, B, maxX);
+// for(var i = 0; i < N; i++){
+//     prevDArcLength = dArcLength;
+//     prevGuess = guess;
+//     guess -= sign(dArcLength)*jumpAmount*left;
+//     if(guess > maxY){
+//         guess = maxY;
+//     }
+//     dArcLength = sFunc2Y(guess, a, b, left) - s0;
+//     if(abs(prevDArcLength) <= abs(dArcLength)){
+//         if(jumpAmount > 1){
+//             jumpAmount = round(jumpAmount/2);
+//         } else{
+//             break;
+//         }
+//     }
+// }
+// print(i)
+// var y0 = prevGuess;
+// var x0 = determineX(y0, a, b, left);
+
+// return [x0, y0];
+
+// #define determineLeft(a, b, arcLength) // determine if our goal position is to the left or right of the max
+// var maxX = determineMaxX(a, b);
+// return sign(round((sFunc2(maxX, a, b) - arcLength)/15));
+
+// #define calcPosY(A, B, xShift, yShift, arcLength, baseGuess)
+// var left = determineLeft(A, B, arcLength)
+// var positions;
+// if(left == 0){
+//     var maxX = determineMaxX(A, B);
+//     positions = [maxX, determineMaxY(A, B, maxX)];
+// } else{
+//     positions = findPosY(A, B, arcLength, baseGuess, left);
+// }
+// return [positions[0] + xShift, positions[1] + yShift];
 
 
 // functions to calculate angle at position on arc
