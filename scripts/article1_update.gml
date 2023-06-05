@@ -59,7 +59,7 @@ for(var chainIndex = 0; chainIndex < numChainSegments; chainIndex++){
             if(left){
                 var maxX = determineMaxX(A, B);
                 var maxY = determineMaxY(A, B, maxX);
-                remainingChainSegment = (maxY-(chainSegmentYs[chainIndex-1]-yShift)) / ((numChainSegments-chainIndex) * ((maxX-(chainSegmentXs[chainIndex-1]-xShift)) / ((rightX-xShift)-maxX)));
+                remainingChainSegment = (maxY-(chainSegmentYs[chainIndex-1]-yShift)) / ((numChainSegments-chainIndex) * ((maxX-(chainSegmentXs[chainIndex-1]-xShift)) / (rightX-chainSegmentXs[chainIndex-1])));
             } else{
                 remainingChainSegment = (rightY-chainSegmentYs[chainIndex-1]) / (numChainSegments-chainIndex);
             }
@@ -82,7 +82,6 @@ for(var chainIndex = 0; chainIndex < numChainSegments; chainIndex++){
     chainSegmentYs[chainIndex] = round(positions[1]);
     chainSegmentAngles[chainIndex] = calcAngle(chainSegmentXs[chainIndex], A, B, xShift);
 }
-
 
 
 /* ////////////////////////////////////////////////////////////////////////////////////
@@ -160,7 +159,7 @@ for(var i = 0; i < N; i++){
         }
     }
 }
-// print(i)
+print(i)
 var x0 = prevGuess;
 var y0 = a*x0*x0 + b*x0;
 
