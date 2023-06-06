@@ -189,6 +189,7 @@ chain_breaking_kb = 10;
 MAX_TAPE = 3;
 TAPE_SLOW_FACTOR = 0.5;
 TAPE_STUN_TIME = 60;
+TAPE_INNER_STUCK_PROPORTION = 0.25;
 debug_flag = 0;
 
 // MunoPhone Touch code - don't touch
