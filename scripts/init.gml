@@ -188,7 +188,8 @@ slowed_by_tape = array_create(8, false);
 chain_breaking_kb = 10;
 MAX_TAPE = 3;
 TAPE_SLOW_FACTOR = 0.5;
-debug_flag = 1;
+TAPE_STUN_TIME = 60;
+debug_flag = 0;
 
 // MunoPhone Touch code - don't touch
 // should be at BOTTOM of file, but above any #define lines

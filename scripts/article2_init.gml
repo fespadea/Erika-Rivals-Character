@@ -4,6 +4,7 @@ is_hittable = true;
 can_be_grounded = false;
 ignores_walls = true;
 slow_factor = player_id.TAPE_SLOW_FACTOR;
+stun_time = player_id.TAPE_STUN_TIME;
 can_be_hit[player] = 2147483647;
 uses_shader = true;
 debug_flag = player_id.debug_flag;

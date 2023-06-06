@@ -21,7 +21,7 @@ set_window_value(AT_DSPECIAL, 3, AG_WINDOW_LENGTH, 16);
 set_window_value(AT_DSPECIAL, 3, AG_WINDOW_ANIM_FRAMES, 4);
 set_window_value(AT_DSPECIAL, 3, AG_WINDOW_ANIM_FRAME_START, 2);
 
-set_num_hitboxes(AT_DSPECIAL, 2);
+set_num_hitboxes(AT_DSPECIAL, 1);
 
 set_hitbox_value(AT_DSPECIAL, 1, HG_HITBOX_TYPE, 1);
 set_hitbox_value(AT_DSPECIAL, 1, HG_WINDOW, 2);
@@ -38,22 +38,6 @@ set_hitbox_value(AT_DSPECIAL, 1, HG_VISUAL_EFFECT, 20);
 set_hitbox_value(AT_DSPECIAL, 1, HG_HIT_SFX, asset_get("sfx_absa_singlezap1"));
 set_hitbox_value(AT_DSPECIAL, 1, HG_ANGLE_FLIPPER, 6);
 set_hitbox_value(AT_DSPECIAL, 1, HG_TECHABLE, 1);
-
-set_hitbox_value(AT_DSPECIAL, 2, HG_HITBOX_TYPE, 1);
-set_hitbox_value(AT_DSPECIAL, 2, HG_WINDOW, 4);
-set_hitbox_value(AT_DSPECIAL, 2, HG_LIFETIME, 1);
-set_hitbox_value(AT_DSPECIAL, 2, HG_WIDTH, sprite_get_width(sprite_get("duct_tape")));
-set_hitbox_value(AT_DSPECIAL, 2, HG_HEIGHT, sprite_get_height(sprite_get("duct_tape")));
-set_hitbox_value(AT_DSPECIAL, 2, HG_PRIORITY, 1);
-set_hitbox_value(AT_DSPECIAL, 2, HG_DAMAGE, 0);
-set_hitbox_value(AT_DSPECIAL, 2, HG_BASE_KNOCKBACK, 0);
-set_hitbox_value(AT_DSPECIAL, 2, HG_KNOCKBACK_SCALING, 0);
-set_hitbox_value(AT_DSPECIAL, 2, HG_BASE_HITPAUSE, 600);
-set_hitbox_value(AT_DSPECIAL, 2, HG_VISUAL_EFFECT, 20);
-set_hitbox_value(AT_DSPECIAL, 2, HG_HIT_SFX, asset_get("sfx_absa_singlezap1"));
-set_hitbox_value(AT_DSPECIAL, 2, HG_TECHABLE, 1);
-set_hitbox_value(AT_DSPECIAL, 2, HG_DRIFT_MULTIPLIER, 0);
-set_hitbox_value(AT_DSPECIAL, 2, HG_SDI_MULTIPLIER, 0);
 
 
 
