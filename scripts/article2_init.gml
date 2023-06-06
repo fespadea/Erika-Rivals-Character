@@ -1,0 +1,9 @@
+sprite_index = sprite_get("duct_tape");
+mask_index = sprite_get("duct_tape");
+is_hittable = true;
+can_be_grounded = false;
+ignores_walls = true;
+slow_factor = player_id.TAPE_SLOW_FACTOR;
+can_be_hit[player] = 2147483647;
+uses_shader = true;
+debug_flag = player_id.debug_flag;

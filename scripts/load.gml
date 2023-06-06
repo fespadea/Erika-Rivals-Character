@@ -56,3 +56,5 @@ sprite_change_offset("nspecial_proj", 64, 94);
 
 sprite_change_offset("chain_link", 0, 2);
 sprite_change_offset("chain_link2", 13, 2);
+sprite_change_offset("duct_tape", sprite_get_width(sprite_get("duct_tape")) / 2, 0);
+sprite_change_collision_mask( "duct_tape", false, 0, 0, 0, 0, 0, 0 );
