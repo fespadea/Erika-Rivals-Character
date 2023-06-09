@@ -1,3 +1,3 @@
-// other Erika
+// other init
 
 erikaTapeSlowed = false;
