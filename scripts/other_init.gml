@@ -1,0 +1,3 @@
+// other init
+
+erikaTapeSlowed = false;
