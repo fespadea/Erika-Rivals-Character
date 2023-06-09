@@ -8,8 +8,8 @@ with asset_get("oPlayer") {
                 set_state(PS_WRAPPED);
                 wrap_time = other.stun_time;
             }
-        } else if (!other.player_id.slowed_by_tape[player]) {
-            other.player_id.slowed_by_tape[player] = true;
+        } else if (!erikaTapeSlowed) {
+            erikaTapeSlowed = true;
             x -= round(hsp * other.slow_factor);
             y -= round(vsp * other.slow_factor);
         }
