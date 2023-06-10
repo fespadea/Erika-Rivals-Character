@@ -6,3 +6,7 @@ user_event(14);
 doing_goku_beam = (phone_attacking && attack == AT_NSPECIAL && window == clamp(window, 4, 6));
 
 if phone_cheats[CHEAT_FLY] && !shield_down vsp = -1;
+
+with oPlayer{
+    erikaTapeSlowed = false;
+}

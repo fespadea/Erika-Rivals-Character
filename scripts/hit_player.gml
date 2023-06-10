@@ -14,6 +14,13 @@ if my_hitboxID.attack == AT_NSPECIAL && my_hitboxID.hbox_num == 2 && my_hitboxID
 	sound_play(sfx_dbfz_hit_broken);
 }
 
-if(my_hitboxID.attack == AT_FSPECIAL){
-	instance_create(x, y, "obj_article1").tethered_id = hit_player_obj;
+if my_hitboxID.attack == AT_FSPECIAL {
+	for (var i = 0; i < ds_list_size(my_chains); i++) {
+		curr_chain = my_chains[| i];
+		if (curr_chain.tethered_id == hit_player_obj) {
+			return;
+		}
+	}
+	new_chain = instance_create(x, y, "obj_article1");
+	ds_list_add(my_chains, new_chain);
 }

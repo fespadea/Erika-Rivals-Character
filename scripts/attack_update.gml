@@ -301,6 +301,10 @@ switch(attack){
 		}
 		can_fast_fall = false;
 		can_move = false;
+		if (window == 3 && window_timer == 15 && ds_list_size(my_tape) < MAX_TAPE) {
+			var tape = instance_create(x, y, "obj_article2");
+			ds_list_add(my_tape, tape);
+		}
 		break;
 	
 	

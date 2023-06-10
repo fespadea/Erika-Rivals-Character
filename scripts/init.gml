@@ -102,8 +102,8 @@ beam_newest_hbox = noone;
 // Misc. animation speeds
 idle_anim_speed     = 0.1;
 crouch_anim_speed   = 0.1;
-walk_anim_speed     = 0.125;
-dash_anim_speed     = 0.2;
+walk_anim_speed     = 0.16;
+dash_anim_speed     = 0.25;
 pratfall_anim_speed = 0.25;
 
 // Jumps
@@ -180,8 +180,17 @@ air_dodge_sound     = asset_get("sfx_quick_dodge");
 bubble_x = 0;
 bubble_y = 8;
 
+my_chains = ds_list_create();
+my_tape = ds_list_create();
+
 DEFAULT_CHAIN_LENGTH = 200;
 DEFAULT_STRETCH_AMOUNT = 100;
+CHAIN_BREAKING_KB = 10;
+MAX_TAPE = 3;
+TAPE_SLOW_FACTOR = 0.5;
+TAPE_STUN_TIME = 60;
+TAPE_INNER_STUCK_PROPORTION = 0.25;
+DEBUG_FLAG = 0;
 
 // MunoPhone Touch code - don't touch
 // should be at BOTTOM of file, but above any #define lines
