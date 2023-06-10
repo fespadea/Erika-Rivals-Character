@@ -17,10 +17,6 @@ if(abs(rightX - leftX) < 1){
     var dir = sign(rightX - leftX);
     rightX = leftX + (dir == 0 ? 1 : dir);
 }
-if(abs(rightY - leftY) < 1){
-    var dir = sign(rightY - leftY);
-    rightY = leftY + (dir == 0 ? 1 : dir);
-}
 
 if(dist < normalChainLength){ // calculate A and B in Ax^2 + Bx
     var calcArcResults = calcArc(leftX, leftY, rightX, rightY, normalChainLength);
@@ -84,7 +80,7 @@ if(dist < normalChainLength){
 }
 
 if(player_id.phone_fast){
-    if(player_id.fps_real < 60 && stillLagging < 200){
+    if(player_id.fps_real < 60 && stillLagging < 201){
         stillLagging += 0.2;
     } else{
         stillLagging = floor(stillLagging);
@@ -116,8 +112,7 @@ return 0.5 * (a*x0*(dIFunc(u) + dIFunc(l)) + IFunc(l) - IFunc(u)) / (a*a);
 var N = 10;
 var EPSILON = 0.001;
 if(player_id.phone_fast){
-    EPSILON *= floor(stillLagging/2);
-    EPSILON = min(EPSILON, 0.1);
+    N -= floor(stillLagging / 25);
 }
 
 var guess = y0/x0;
@@ -144,9 +139,8 @@ if(A == 0){
     return {A: {x: leftX, y: leftY}, B: "N/A", C: {x: rightX, y: rightY}};
 }
 var leftSlope = calcSlope(leftX, A, B, xShift);
-var rightSlope = calcSlope(rightX, A, B, xShift);
 
-var controlX = (rightY + leftSlope*leftX - leftY - rightSlope*rightX) / (leftSlope - rightSlope);
+var controlX = (leftX + rightX) / 2;
 var controlY = leftSlope*(controlX - leftX) + leftY;
 
 return {A: {x: leftX, y: leftY}, B: {x: controlX, y: controlY}, C: {x: rightX, y: rightY}};
@@ -154,7 +148,7 @@ return {A: {x: leftX, y: leftY}, B: {x: controlX, y: controlY}, C: {x: rightX, y
 #define bezPointToCart(bezPoints, t)
 var xVal;
 var yVal;
-if(bezPoints.B = "N/A"){
+if(bezPoints.B == "N/A"){
     xVal = (1-t)*bezPoints.A.x + t*bezPoints.C.x;
     yVal = (1-t)*bezPoints.A.y + t*bezPoints.C.y;
 } else{
