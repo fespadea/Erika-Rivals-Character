@@ -1,5 +1,9 @@
 // article 1 update
 
+var leftX;
+var leftY;
+var rightX;
+var rightY;
 if(owner_id.x > tethered_id.x){
     leftX = tethered_id.x;
     leftY = tethered_id.y - tethered_id.char_height / 2;
@@ -12,12 +16,15 @@ if(owner_id.x > tethered_id.x){
     rightY = tethered_id.y - tethered_id.char_height / 2;
 }
 
-dist = point_distance(leftX, leftY, rightX, rightY);
+var dist = point_distance(leftX, leftY, rightX, rightY);
 if(abs(rightX - leftX) < 1){
     var dir = sign(rightX - leftX);
     rightX = leftX + (dir == 0 ? 1 : dir);
 }
 
+var A;
+var B;
+var arcLength;
 if(dist < normalChainLength){ // calculate A and B in Ax^2 + Bx
     var calcArcResults = calcArc(leftX, leftY, rightX, rightY, normalChainLength);
     A = calcArcResults.A;
@@ -29,18 +36,18 @@ if(dist < normalChainLength){ // calculate A and B in Ax^2 + Bx
     arcLength = dist;
 } else{
     with (player_id) {
-        chain_ind = ds_list_find_index(my_chains, other);
+        var chain_ind = ds_list_find_index(my_chains, other);
         if (chain_ind >= 0) {
             ds_list_delete(my_chains, chain_ind);
         } else {
             print_debug("Chain to delete does not exist!");
         }
     }
-    instance_destroy(self);
+    instance_destroy();
     exit;
 }
-xShift = leftX;
-yShift = leftY;
+var xShift = leftX;
+var yShift = leftY;
 
 var bezPoints = quadToBez(A, B, leftX, leftY, rightX, rightY, xShift);
 if(dist < normalChainLength){
@@ -52,7 +59,7 @@ if(dist < normalChainLength){
     var numMeasurements = ceil(normalChainLength/approximationFactor);
     var chainLengths = array_create(numMeasurements+1);
     for(var tIndex = 1; tIndex <= numMeasurements; tIndex++){
-        position = bezPointToCart(bezPoints, tIndex/numMeasurements);
+        var position = bezPointToCart(bezPoints, tIndex/numMeasurements);
         chainLengths[tIndex] = sFunc2(position.x-xShift, A, B);
     }
     
