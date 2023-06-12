@@ -1,6 +1,6 @@
 //debug-draw
 if (player == 1 && DEBUG_FLAG) {
-	// debug_draw_text(1, something);
+    // debug_draw_text(1, something);
 }
 
 #define debug_draw_text(ySlot, text)

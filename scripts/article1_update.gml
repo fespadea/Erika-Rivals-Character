@@ -29,14 +29,14 @@ if(dist < normalChainLength){ // calculate A and B in Ax^2 + Bx
     arcLength = dist;
 } else{
     with (player_id) {
-		chain_ind = ds_list_find_index(my_chains, other);
-		if (chain_ind >= 0) {
-			ds_list_delete(my_chains, chain_ind);
-		} else {
-			print_debug("Chain to delete does not exist!");
-		}
-	}
-	instance_destroy(self);
+        chain_ind = ds_list_find_index(my_chains, other);
+        if (chain_ind >= 0) {
+            ds_list_delete(my_chains, chain_ind);
+        } else {
+            print_debug("Chain to delete does not exist!");
+        }
+    }
+    instance_destroy(self);
     exit;
 }
 xShift = leftX;
