@@ -14,7 +14,7 @@ if my_hitboxID.attack == AT_NSPECIAL && my_hitboxID.hbox_num == 2 && my_hitboxID
     sound_play(sfx_dbfz_hit_broken);
 }
 
-if my_hitboxID.attack == AT_FSPECIAL {
+if my_hitboxID.attack == AT_FSPECIAL && my_hitboxID.hbox_num == 1{
     for (var i = 0; i < ds_list_size(my_chains); i++) {
         curr_chain = my_chains[| i];
         if (curr_chain.tethered_id == hit_player_obj) {
@@ -23,4 +23,8 @@ if my_hitboxID.attack == AT_FSPECIAL {
     }
     new_chain = instance_create(x, y, "obj_article1");
     ds_list_add(my_chains, new_chain);
+}
+
+if my_hitboxID.attack == AT_FSPECIAL && my_hitboxID.hbox_num == 2{
+    hit_player_obj.free = true;
 }

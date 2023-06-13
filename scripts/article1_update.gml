@@ -4,14 +4,14 @@ var leftX;
 var leftY;
 var rightX;
 var rightY;
-if(owner_id.x > tethered_id.x){
+if(player_id.x > tethered_id.x){
     leftX = tethered_id.x;
     leftY = tethered_id.y - tethered_id.char_height / 2;
-    rightX = owner_id.x;
-    rightY = owner_id.y - owner_id.char_height / 2;
+    rightX = player_id.x;
+    rightY = player_id.y - player_id.char_height / 2;
 } else{
-    leftX = owner_id.x;
-    leftY = owner_id.y - owner_id.char_height / 2;
+    leftX = player_id.x;
+    leftY = player_id.y - player_id.char_height / 2;
     rightX = tethered_id.x;
     rightY = tethered_id.y - tethered_id.char_height / 2;
 }
@@ -31,9 +31,32 @@ if(dist < normalChainLength){ // calculate A and B in Ax^2 + Bx
     B = calcArcResults.B;
     arcLength = normalChainLength;
 } else if(dist < maxChainLength){
+    var yDist = rightY - leftY;
+    var xDist = rightX - leftX;
     A = 0;
-    B = (rightY - leftY) / (rightX - leftX);
+    B = yDist / xDist;
     arcLength = dist;
+    if (dist > 0) {
+        var tension = chainMaxTension * (dist - normalChainLength) / (maxChainLength - normalChainLength);
+        var verticalForce = tension * abs(yDist) / dist;
+        var horizontalForce = tension * xDist / dist;
+        if (player_id.x > tethered_id.x) {
+            tethered_id.hsp += horizontalForce;
+            player_id.hsp -= horizontalForce;
+        } else {
+            player_id.hsp += horizontalForce;
+            tethered_id.hsp -= horizontalForce;
+        }
+        if (player_id.y > tethered_id.y) {
+            tethered_id.vsp += tethered_id.free ? verticalForce : 0;
+            verticalForce = player_id.vsp < 0 ? verticalForce : verticalForce * player_id.grav / (verticalForce + player_id.grav);
+            player_id.vsp -= player_id.free ? verticalForce : 0;
+        } else {
+            player_id.vsp += player_id.free ? verticalForce : 0;
+            verticalForce = tethered_id.vsp < 0 ? verticalForce : verticalForce * tethered_id.grav / (verticalForce + tethered_id.grav);
+            tethered_id.vsp -= tethered_id.free ? verticalForce : 0;
+        }
+    }
 } else{
     with (player_id) {
         var chain_ind = ds_list_find_index(my_chains, other);
@@ -43,6 +66,9 @@ if(dist < normalChainLength){ // calculate A and B in Ax^2 + Bx
             print_debug("Chain to delete does not exist!");
         }
     }
+    breakHitbox = create_hitbox(AT_FSPECIAL, 2, tethered_id.x, floor(tethered_id.y - tethered_id.char_height / 2));
+    breakHitbox.kb_angle = darctan2(tethered_id.y - player_id.y, player_id.x - tethered_id.x);
+    breakHitbox.kb_value = 1.5 * sqrt(sqr(player_id.hsp - tethered_id.hsp) + sqr(player_id.vsp - tethered_id.vsp));
     instance_destroy();
     exit;
 }
