@@ -1,5 +1,5 @@
 //debug-draw
-if (player == 1 && debug_flag) {
+if (player == 1 && DEBUG_FLAG) {
 	// debug_draw_text(1, something);
 }
 

@@ -1,12 +1,20 @@
+// article 1 init
+
 can_be_grounded = false;
 ignores_walls = true;
-with (player_id) {
-    other.tethered_id = hit_player_obj;
-}
-owner_true_y = player_id.y - player_id.char_height / 2;
-tethered_true_y = tethered_id.y - tethered_id.char_height / 2;
-chain_length = player_id.chain_length * 16;
-chain_segments = player_id.chain_segments;
-chain_link_sprite = sprite_get("chain_link");
-chain_link_sprite2 = sprite_get("chain_link2");
-debug_flag = player_id.debug_flag;
+uses_shader = true;
+owner_id = player_id;
+tethered_id = player_id.hit_player_obj;
+depth = min(owner_id.depth, tethered_id.depth) - 1;
+chainLinkSprite = sprite_get("chain_link");
+
+normalChainLength = player_id.DEFAULT_CHAIN_LENGTH;
+maxChainLength = normalChainLength + player_id.DEFAULT_STRETCH_AMOUNT;
+adjustedChainSpriteWidth = sprite_get_width(chainLinkSprite) - 3;
+numChainSegments = ceil(maxChainLength / adjustedChainSpriteWidth);
+chainSegmentXs = array_create(numChainSegments);
+chainSegmentYs = array_create(numChainSegments);
+chainSegmentAngles = array_create(numChainSegments);
+
+// for detecting if the chain needs to be simpler
+stillLagging = 1;

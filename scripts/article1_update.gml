@@ -1,7 +1,34 @@
-owner_true_y = player_id.y - player_id.char_height / 2;
-tethered_true_y = tethered_id.y - tethered_id.char_height / 2;
-if (point_distance(player_id.x, owner_true_y, tethered_id.x, tethered_true_y) > chain_length) {
-	with (player_id) {
+// article 1 update
+
+if(owner_id.x > tethered_id.x){
+    leftX = tethered_id.x;
+    leftY = tethered_id.y - tethered_id.char_height / 2;
+    rightX = owner_id.x;
+    rightY = owner_id.y - owner_id.char_height / 2;
+} else{
+    leftX = owner_id.x;
+    leftY = owner_id.y - owner_id.char_height / 2;
+    rightX = tethered_id.x;
+    rightY = tethered_id.y - tethered_id.char_height / 2;
+}
+
+dist = point_distance(leftX, leftY, rightX, rightY);
+if(abs(rightX - leftX) < 1){
+    var dir = sign(rightX - leftX);
+    rightX = leftX + (dir == 0 ? 1 : dir);
+}
+
+if(dist < normalChainLength){ // calculate A and B in Ax^2 + Bx
+    var calcArcResults = calcArc(leftX, leftY, rightX, rightY, normalChainLength);
+    A = calcArcResults.A;
+    B = calcArcResults.B;
+    arcLength = normalChainLength;
+} else if(dist < maxChainLength){
+    A = 0;
+    B = (rightY - leftY) / (rightX - leftX);
+    arcLength = dist;
+} else{
+    with (player_id) {
 		chain_ind = ds_list_find_index(my_chains, other);
 		if (chain_ind >= 0) {
 			ds_list_delete(my_chains, chain_ind);
@@ -10,150 +37,137 @@ if (point_distance(player_id.x, owner_true_y, tethered_id.x, tethered_true_y) > 
 		}
 	}
 	instance_destroy(self);
+    exit;
+}
+xShift = leftX;
+yShift = leftY;
+
+var bezPoints = quadToBez(A, B, leftX, leftY, rightX, rightY, xShift);
+if(dist < normalChainLength){
+    var approximationFactor = 4;
+    if(player_id.phone_fast){
+        approximationFactor *= floor(stillLagging);
+        approximationFactor = min(approximationFactor, normalChainLength);
+    }
+    var numMeasurements = ceil(normalChainLength/approximationFactor);
+    var chainLengths = array_create(numMeasurements+1);
+    for(var tIndex = 1; tIndex <= numMeasurements; tIndex++){
+        position = bezPointToCart(bezPoints, tIndex/numMeasurements);
+        chainLengths[tIndex] = sFunc2(position.x-xShift, A, B);
+    }
+    
+    tIndex = 1;
+    for(var chainIndex = 0; chainIndex < numChainSegments; chainIndex++){
+        var chainLinkArcLength = arcLength / numChainSegments * (chainIndex + 0.5);
+        while(chainLengths[tIndex] < chainLinkArcLength){
+            tIndex++;
+        }
+        var overShootProportion = (chainLengths[tIndex]-chainLinkArcLength) / (chainLengths[tIndex]-chainLengths[tIndex-1]);
+        var t = (tIndex-overShootProportion)/numMeasurements;
+        var position = bezPointToCart(bezPoints, t);
+        chainSegmentXs[chainIndex] = round(position.x);
+        chainSegmentYs[chainIndex] = round(position.y);
+        chainSegmentAngles[chainIndex] = calcAngle(chainSegmentXs[chainIndex], A, B, xShift);
+    }
+} else{
+    for(var chainIndex = 0; chainIndex < numChainSegments; chainIndex++){
+        var t = 1/numChainSegments * (chainIndex + 0.5);
+        var position = bezPointToCart(bezPoints, t);
+        chainSegmentXs[chainIndex] = round(position.x);
+        chainSegmentYs[chainIndex] = round(position.y);
+        chainSegmentAngles[chainIndex] = calcAngle(chainSegmentXs[chainIndex], A, B, xShift);
+    }
 }
 
-/*if (init == 0) {
-	hsp = lengthdir_x(player_id.up_b_speed, player_id.up_b_dir);
-	vsp = lengthdir_y(player_id.up_b_speed, player_id.up_b_dir);
-	var angle = player_id.up_b_dir;
-	if (angle == 90 || angle == 270) {
-		spr_dir = player_id.spr_dir;
-		angle = (angle + 90 * (1 - spr_dir)) % 360;
-	}
-	if (angle > 90 && angle < 270) {
-		angle = (180 + angle) % 360;
-		spr_dir = -1;
-	}
-	image_angle = angle;
-
-	if (x > stage_x && x < room_width - stage_x && y > stage_y) {
-		spawned_in_floor = true;
-	}
-	
-	for (i = 0; i < 6; i++) {
-		var temp_x = 62 - player_id.hornet_x_offset + 8 * i;
-		var temp_y = -60 + player_id.hornet_y_offset;
-		var final_x = temp_x * dcos(angle * spr_dir) - temp_y * dsin(angle * spr_dir);
-		var final_y = temp_x * dsin(angle * spr_dir) + temp_y * dcos(angle * spr_dir);
-		var hitbox = create_hitbox(AT_USPECIAL, 1, x + round(final_x) * spr_dir, y - round(final_y));
-		hitbox.hsp = hsp;
-		hitbox.vsp = vsp;
-		hitbox.kb_angle = angle;
-		hitbox.hornet = self;
-	}
-	
-	init = 1;
-	sound_play(sound_get("hornet_yell_" + string(random_func(0, 2, true) + 1)));
-	sprite_index = sprite_get("hornet");
-	with (asset_get("obj_article1")){
-		if (id != other.id && player_id == other.player_id){
-			active = false;
-		}
-	}
+if(player_id.phone_fast){
+    if(player_id.fps_real < 60 && stillLagging < 201){
+        stillLagging += 0.2;
+    } else{
+        stillLagging = floor(stillLagging);
+    }
 }
 
-if (x > stage_x && x < room_width - stage_x && y > stage_y && life_timer < spawn_grace_period) {
-	spawned_in_floor = true;
+/* ////////////////////////////////////////////////////////////////////////////////////
+    These functions are used to calculate the arc of the chain.
+    Most of the code is adapted from the python code here: https://stackoverflow.com/questions/48486254/determine-parabola-with-given-arc-length-between-two-known-points
+*/ ////////////////////////////////////////////////////////////////////////////////////
+#define dIFunc(t)
+return sqrt(1 + t * t);
+
+#define IFunc(t)
+var rt = sqrt(1 + t * t);
+return 0.5 * (t * rt + ln(t + rt));
+
+#define sFunc(a, x0, y0)
+var u = y0/x0 + a*x0;
+var l = y0/x0 - a*x0;
+return 0.5 * (IFunc(u) - IFunc(l)) / a;
+
+#define dsFunc(a, x0, y0)
+var u = y0/x0 + a*x0;
+var l = y0/x0 - a*x0;
+return 0.5 * (a*x0*(dIFunc(u) + dIFunc(l)) + IFunc(l) - IFunc(u)) / (a*a);
+
+#define findCoeff(x0, y0, s0)
+var N = 10;
+var EPSILON = 0.001;
+if(player_id.phone_fast){
+    N -= floor(stillLagging / 25);
 }
 
-life_timer++;
-invalidation_timer += invalidating;
-
-if (life_timer % 5 == 0) {
-	image_index = (image_index + 1) % image_number;
+var guess = y0/x0;
+for(var i = 0; i < N; i++){
+    if(guess == 0){
+        guess = 0.0000001
+    }
+    var dguess = (sFunc(guess, x0, y0) - s0) / dsFunc(guess, x0, y0);
+    guess -= dguess;
+    if(abs(dguess) <= EPSILON)
+        break;
 }
+var A = -abs(guess);
+var B = y0/x0 - A*x0;
 
-if (player_id.state_cat == SC_HITSTUN) {
-	active = false;
-	keep_life = true;
-}
-if (player_id.state == PS_AIR_DODGE || player_id.state == PS_PARRY_START) {
-	active = false;
-	if (!keep_life) {
-		invalidation_timer = wall_grace_period;
-	}
-}
+return {A: A, B: B};
 
-if (grabbed == 0 && active) {
-	if (hsp > 0 && vsp > 0 && (x >= player_x || y >= player_y)) {
-		grabbed = 1;
-		keep_life = true;
-	}
-	if (hsp < 0 && vsp > 0 && (x <= player_x || y >= player_y)) {
-		grabbed = 1;
-		keep_life = true;
-	}
-	if (hsp < 0 && vsp < 0 && (x <= player_x || y <= player_y)) {
-		grabbed = 1;
-		keep_life = true;
-	}
-	if (hsp > 0 && vsp < 0 && (x >= player_x || y <= player_y)) {
-		grabbed = 1;
-		keep_life = true;
-	}
-	if (hsp > 0 && vsp == 0 && x >= player_x) {
-		grabbed = 1;
-		keep_life = true;
-	}
-	if (hsp < 0 && vsp == 0 && x <= player_x) {
-		grabbed = 1;
-		keep_life = true;
-	}
-	if (hsp == 0 && vsp > 0 && y >= player_y) {
-		grabbed = 1;
-		keep_life = true;
-	}
-	if (hsp == 0 && vsp < 0 && y <= player_y) {
-		grabbed = 1;
-		keep_life = true;
-	}
+
+#define calcArc(x0, y0, x1, y1, S)
+return findCoeff(x1 - x0, y1 - y0, S);
+
+#define quadToBez(A, B, leftX, leftY, rightX, rightY, xShift)
+if(A == 0){
+    return {A: {x: leftX, y: leftY}, B: "N/A", C: {x: rightX, y: rightY}};
+}
+var leftSlope = calcSlope(leftX, A, B, xShift);
+
+var controlX = (leftX + rightX) / 2;
+var controlY = leftSlope*(controlX - leftX) + leftY;
+
+return {A: {x: leftX, y: leftY}, B: {x: controlX, y: controlY}, C: {x: rightX, y: rightY}};
+
+#define bezPointToCart(bezPoints, t)
+var xVal;
+var yVal;
+if(bezPoints.B == "N/A"){
+    xVal = (1-t)*bezPoints.A.x + t*bezPoints.C.x;
+    yVal = (1-t)*bezPoints.A.y + t*bezPoints.C.y;
+} else{
+    xVal = sqr(1-t)*bezPoints.A.x + 2*(1-t)*t*bezPoints.B.x + sqr(t)*bezPoints.C.x;
+    yVal = sqr(1-t)*bezPoints.A.y + 2*(1-t)*t*bezPoints.B.y + sqr(t)*bezPoints.C.y;
 }
 
-if (grabbed > 0 && player_id.window == 2 && active) {
-	player_id.window = 3;
-	player_id.window_timer = 0;
-	player_id.x = x - player_id.up_b_knight_x_offset;
-	player_id.hsp = hsp;
-	player_id.y = y + player_id.up_b_knight_y_offset;
-	player_id.vsp = vsp;
-	active = false;
-}
+return {x: xVal, y: yVal};
 
-if ((y < -50 && vsp < 0) || (y > room_height + 50 && vsp > 0) || (x < -50 && hsp < 0) || (x > room_width + 50 && hsp > 0)) {
-	with(asset_get("pHitBox")) {
-		if (variable_instance_exists(self, "hornet") && hornet == other) {
-			destroyed = true;
-		}
-	}
-	instance_destroy();
-	exit;
-}
+#define sFunc2(x0, a, b)
+var u = 2 * a * x0 + b;
+var l = b;
+return 0.5 * (IFunc(u) - IFunc(l)) / a;
 
-if (x > stage_x && x < room_width - stage_x && y > stage_y && !spawned_in_floor) {
-	invalidating = 1;
-}
-else if (invalidation_timer < wall_grace_period) {
-	invalidating = 0;
-	invalidation_timer = 0;
-}
 
-if (invalidation_timer >= wall_grace_period && active) {
-	active = false;
-	if (player_id.window == 2) {
-		player_id.window_timer = max(80 + invalidation_timer, player_id.window_timer);
-	}
-}
+// functions to calculate angle at position on arc
+#define calcSlope(x0, A, B, xShift)
+return 2 * A * (x0 - xShift) + B;
 
-if (invalidation_timer >= wall_grace_period) {
-	with (asset_get("pHitBox")) {
-		if (variable_instance_exists(self, "hornet") && hornet == other) {
-			destroyed = true;
-		}
-	}
-	vsp++;
-	image_angle = (darctan2(-vsp, hsp) + 90 * (1 - spr_dir)) % 360;
-	//dumb case where hornet going straight up facing right and vsp is 0 so tan gets angry
-	if (spr_dir = 1 && image_angle == -180) {
-		image_angle = 0;
-	}
-}*/
+#define calcAngle(x0, A, B, xShift)
+var slope = -calcSlope(x0, A, B, xShift);
+return darctan2(slope, 1);

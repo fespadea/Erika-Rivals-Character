@@ -9,4 +9,4 @@ width_proportion = sprite_get_width(sprite_index) * player_id.TAPE_INNER_STUCK_P
 height_proportion = sprite_get_height(sprite_index) * player_id.TAPE_INNER_STUCK_PROPORTION;
 can_be_hit[player] = 2147483647;
 uses_shader = true;
-debug_flag = player_id.debug_flag;
+debug_flag = player_id.DEBUG_FLAG;
