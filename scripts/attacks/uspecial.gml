@@ -63,17 +63,17 @@ set_hitbox_value(AT_USPECIAL, 1, HG_ANGLE_FLIPPER, 8);
 set_hitbox_value(AT_USPECIAL, 1, HG_HITBOX_GROUP, -1);
 
 for (var i = 0; i < 6; i++){
-	var window_3 = (i == 5);
-	
-	set_hitbox_value(AT_USPECIAL, i + 2, HG_MUNO_HITBOX_NAME, "Multihit " + string(i + 2));
-	
-	set_hitbox_value(AT_USPECIAL, i + 2, HG_PARENT_HITBOX, 1);
-	set_hitbox_value(AT_USPECIAL, i + 2, HG_HITBOX_TYPE, 1);
-	set_hitbox_value(AT_USPECIAL, i + 2, HG_WINDOW, window_3 ? 3 : 2);
-	set_hitbox_value(AT_USPECIAL, i + 2, HG_WINDOW_CREATION_FRAME, window_3 ? 0 : (i + 1) * 4);
-	set_hitbox_value(AT_USPECIAL, i + 2, HG_LIFETIME, 4);
-	set_hitbox_value(AT_USPECIAL, i + 2, HG_HITBOX_Y, -35);
-	set_hitbox_value(AT_USPECIAL, i + 2, HG_HITBOX_GROUP, -1);
+    var window_3 = (i == 5);
+    
+    set_hitbox_value(AT_USPECIAL, i + 2, HG_MUNO_HITBOX_NAME, "Multihit " + string(i + 2));
+    
+    set_hitbox_value(AT_USPECIAL, i + 2, HG_PARENT_HITBOX, 1);
+    set_hitbox_value(AT_USPECIAL, i + 2, HG_HITBOX_TYPE, 1);
+    set_hitbox_value(AT_USPECIAL, i + 2, HG_WINDOW, window_3 ? 3 : 2);
+    set_hitbox_value(AT_USPECIAL, i + 2, HG_WINDOW_CREATION_FRAME, window_3 ? 0 : (i + 1) * 4);
+    set_hitbox_value(AT_USPECIAL, i + 2, HG_LIFETIME, 4);
+    set_hitbox_value(AT_USPECIAL, i + 2, HG_HITBOX_Y, -35);
+    set_hitbox_value(AT_USPECIAL, i + 2, HG_HITBOX_GROUP, -1);
 }
 
 set_hitbox_value(AT_USPECIAL, 8, HG_MUNO_HITBOX_NAME, "Launcher");

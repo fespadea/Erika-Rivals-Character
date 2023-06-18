@@ -1,8 +1,8 @@
 // phone - frontend
 
 if object_index == asset_get("cs_playerbg_obj"){
-	CORE_css_draw();
-	exit;
+    CORE_css_draw();
+    exit;
 }
 
 CORE_general();
@@ -41,13 +41,13 @@ alt_ui_recolor = 0;
 
 // The list of names for the alts, if enabled.
 alt_names = [
-	"Vanilla",
-	"Blueberry",
-	"Strawberry",
-	"Mint",
-	"gray",
-	"Lemon",
-	];
+    "Vanilla",
+    "Blueberry",
+    "Strawberry",
+    "Mint",
+    "gray",
+    "Lemon",
+    ];
 
 
 
@@ -118,49 +118,49 @@ examples.
 
 Use the initTip() function to start a new Tip:
 
-	initTip(name);
+    initTip(name);
 
 Then, use the following functions to add content or paragraphs:
 
-	initWords(text)
-	
-	initWords_ext(text, alignment, color, indent, ignore_height)
-	
-	initImage(sprite, frame)
-	
-	initImage_ext(sprite, frame, alignment, xscale, yscale, uses_shader, color,
-		alpha, ignore_height, crop_left, crop_right, crop_up, crop_down)
+    initWords(text)
+    
+    initWords_ext(text, alignment, color, indent, ignore_height)
+    
+    initImage(sprite, frame)
+    
+    initImage_ext(sprite, frame, alignment, xscale, yscale, uses_shader, color,
+        alpha, ignore_height, crop_left, crop_right, crop_up, crop_down)
 
 Glossary:
-	
-	"_ext" at the end of a function name means an extended version of the
-		function it's named after - giving you more formatting options.
-	
-	"alignment" can be the GML constants fa_left, fa_center, or fa_right.
-	
-	"color" can be any GML color, e.g. c_red, #00ff00, or make_color_hsv(...).
-		Set this to a string (e.g. "h"), and it will be colored to the main
-		color of whichever phone app the text is being displayed in.
-	
-	"indent" basically allows you to put any amount of "tabs" to the left of a
-		paragraph.
-	
-	"sprite" can be any sprite index, e.g. sprite_get(...) or asset_get(...).
-	
-	"ignore_height" prevents this element from pushing the one below it
-		downward. Set this to true to achieve effects such as two elements
-		being side-by-side.
-	
-	"frame" can be 0 or any positive number for a static image, or a negative
-		number for an animated image. The size of the negative number determines
-		the framerate; -1 is the fastest, -2 is half as fast, -3 a third, etc.
-	
-	"uses_shader" determines whether or not the image should recolor with the
-		character's alt costumes.
-	
-	"crop_left", "crop_right", etc allow you to crop an image by determining how
-		far from the image's offset it should be drawn. Set all four to "noone"
-		and it will use the entire image (including empty space).
+    
+    "_ext" at the end of a function name means an extended version of the
+        function it's named after - giving you more formatting options.
+    
+    "alignment" can be the GML constants fa_left, fa_center, or fa_right.
+    
+    "color" can be any GML color, e.g. c_red, #00ff00, or make_color_hsv(...).
+        Set this to a string (e.g. "h"), and it will be colored to the main
+        color of whichever phone app the text is being displayed in.
+    
+    "indent" basically allows you to put any amount of "tabs" to the left of a
+        paragraph.
+    
+    "sprite" can be any sprite index, e.g. sprite_get(...) or asset_get(...).
+    
+    "ignore_height" prevents this element from pushing the one below it
+        downward. Set this to true to achieve effects such as two elements
+        being side-by-side.
+    
+    "frame" can be 0 or any positive number for a static image, or a negative
+        number for an animated image. The size of the negative number determines
+        the framerate; -1 is the fastest, -2 is half as fast, -3 a third, etc.
+    
+    "uses_shader" determines whether or not the image should recolor with the
+        character's alt costumes.
+    
+    "crop_left", "crop_right", etc allow you to crop an image by determining how
+        far from the image's offset it should be drawn. Set all four to "noone"
+        and it will use the entire image (including empty space).
 
 NOTE: It's recommended to separate each paragraph into its own initWords() line,
 so that things like page breaks can work properly.
@@ -194,7 +194,7 @@ initImage_ext(sprite_get("dspecial"), -4, fa_center, 1, 1, true, c_white, 1, fal
 initTip("FStrong: Burning Dropkick");
 initWords("During the charge of FStrong, Sandbert slides as if on ice. Get a running start to ambush a foe!");
 initImage_ext(sprite_get("fstrong"), -4, fa_center, 1, 1, true, c_white, 1, false, noone, noone, noone, noone);
-	
+    
 initTip("Sandbert's Lore");
 initWords_ext("Chapter 1", fa_center, c_gray, 0, false);
 initWords("Sandbert, a son of the ruling family of the Firelands, is an experienced and hardened warrior. He has fought many wars for the Fire Capital, a bellicose nation that constantly seeks to expand its influence over neighbouring lands. His courage in battle has made him a hero among his people.");
@@ -223,7 +223,7 @@ credits to the developer(s) of the character or any assets used.
 
 Use the initPatch() function to start a new Patch:
 
-	initPatch(version_number, date)
+    initPatch(version_number, date)
 
 If the "date" field is set to an empty string, then the Patch will act more like
 a Tip - mainly useful for making an "About [character]" page.
@@ -234,8 +234,8 @@ images.
 Here are two more content functions, which are designed for use in Patches but
 also work in Tips:
 
-	initHeader(text)
-	initSection(text)
+    initHeader(text)
+    initSection(text)
 
 These are basically shortcuts for two different types of formatted text.
 initHeader() is a text heading that is colored either blue or green, depending
@@ -426,30 +426,30 @@ fun bonuses or useful training utilities (e.g. filling a meter instantly).
 
 Use the initCheat() function to create a Cheat:
 
-	CHEAT_[NAME_HERE] = initCheat(name, [options], [option_names], description)
+    CHEAT_[NAME_HERE] = initCheat(name, [options], [option_names], description)
 
 Glossary:
-	
-	"CHEAT_[NAME_HERE]" is a variable that stores the ID of the Cheat. In the
-		example below, CHEAT_FLY is equal to 0. This is necessary for
-		referencing your cheat later in your character's code.
-	
-	"[options]" is an array of the possible values that the Cheat can have. A
-		simple example is [0, 1] for on and off, but it could also be something
-		like [0, 1, 5, 9] or ["Cherry", "Strawberry", ""].
-	
-	"[option_names]" is an array of the displayed names for the options given in
-		"[options]". It should be the same length as "[options]", and each entry
-		should be a string.
-	
+    
+    "CHEAT_[NAME_HERE]" is a variable that stores the ID of the Cheat. In the
+        example below, CHEAT_FLY is equal to 0. This is necessary for
+        referencing your cheat later in your character's code.
+    
+    "[options]" is an array of the possible values that the Cheat can have. A
+        simple example is [0, 1] for on and off, but it could also be something
+        like [0, 1, 5, 9] or ["Cherry", "Strawberry", ""].
+    
+    "[option_names]" is an array of the displayed names for the options given in
+        "[options]". It should be the same length as "[options]", and each entry
+        should be a string.
+    
 To access a Cheat's current value inside your character's code, grab the entry
 in the "phone_cheats" array at the index of the "CHEAT_" variable. For example:
 
-	// update.gml
-	
-	if phone_cheats[CHEAT_FLY] == 1{
-		vsp = -2;
-	}
+    // update.gml
+    
+    if phone_cheats[CHEAT_FLY] == 1{
+        vsp = -2;
+    }
 
 The "phone_cheats" array entry holds whatever value you defined in "[options]",
 for the Cheat's current setting. (e.g. "phone_cheats" could contain a string,
@@ -457,18 +457,18 @@ not just a number)
 
 You can also run code only at the moment that the Cheat was clicked on, by
 using the "phone_cheats_updated" array (each entry is just true or false):
-	
-	// update.gml
-	
-	if phone_cheats_updated[CHEAT_FLY]{
-		phone_cheats_updated[CHEAT_FLY] = 0; // you have to reset it yourself
-		if phone_cheats[CHEAT_FLY]{
-			print("Flight started");
-		}
-		else{
-			print("Flight ended");
-		}
-	}
+    
+    // update.gml
+    
+    if phone_cheats_updated[CHEAT_FLY]{
+        phone_cheats_updated[CHEAT_FLY] = 0; // you have to reset it yourself
+        if phone_cheats[CHEAT_FLY]{
+            print("Flight started");
+        }
+        else{
+            print("Flight ended");
+        }
+    }
 
 Pro tip: having a Cheat with only a single option is useful if you just need a
 "click button to do X" thing for your character, e.g. "click to reset meter to
@@ -499,56 +499,56 @@ Customise the Frame Data guide.
 
 // Reorder this list to change the order that moves appear in the guide!
 phone.move_ordering = [
-	AT_JAB,
-	AT_FTILT,
-	AT_DTILT,
-	AT_UTILT,
-	AT_DATTACK,
-	AT_FSTRONG,
-	AT_USTRONG,
-	AT_DSTRONG,
-	AT_FSTRONG_2,
-	AT_USTRONG_2,
-	AT_DSTRONG_2,
-	AT_NAIR,
-	AT_FAIR,
-	AT_BAIR,
-	AT_UAIR,
-	AT_DAIR,
-	AT_NSPECIAL,
-	AT_NSPECIAL_AIR,
-	AT_NSPECIAL_2,
-	AT_FSPECIAL,
-	AT_FSPECIAL_AIR,
-	AT_FSPECIAL_2,
-	AT_USPECIAL,
-	AT_USPECIAL_GROUND,
-	AT_USPECIAL_2,
-	AT_DSPECIAL,
-	AT_DSPECIAL_AIR,
-	AT_DSPECIAL_2,
-	AT_NTHROW,
-	AT_FTHROW,
-	AT_UTHROW,
-	AT_DTHROW,
-	AT_EXTRA_1,
-	AT_EXTRA_2,
-	AT_EXTRA_3,
-	AT_TAUNT,
-	AT_TAUNT_2,
-	AT_PHONE,
-	2,
-	3,
-	39,
-	42,
-	43,
-	44,
-	45,
-	46,
-	47,
-	48,
-	49,
-	50
+    AT_JAB,
+    AT_FTILT,
+    AT_DTILT,
+    AT_UTILT,
+    AT_DATTACK,
+    AT_FSTRONG,
+    AT_USTRONG,
+    AT_DSTRONG,
+    AT_FSTRONG_2,
+    AT_USTRONG_2,
+    AT_DSTRONG_2,
+    AT_NAIR,
+    AT_FAIR,
+    AT_BAIR,
+    AT_UAIR,
+    AT_DAIR,
+    AT_NSPECIAL,
+    AT_NSPECIAL_AIR,
+    AT_NSPECIAL_2,
+    AT_FSPECIAL,
+    AT_FSPECIAL_AIR,
+    AT_FSPECIAL_2,
+    AT_USPECIAL,
+    AT_USPECIAL_GROUND,
+    AT_USPECIAL_2,
+    AT_DSPECIAL,
+    AT_DSPECIAL_AIR,
+    AT_DSPECIAL_2,
+    AT_NTHROW,
+    AT_FTHROW,
+    AT_UTHROW,
+    AT_DTHROW,
+    AT_EXTRA_1,
+    AT_EXTRA_2,
+    AT_EXTRA_3,
+    AT_TAUNT,
+    AT_TAUNT_2,
+    AT_PHONE,
+    2,
+    3,
+    39,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50
 ];
 
 // Whether or not to include the "Stats" page.
@@ -706,9 +706,9 @@ doing and have a good reason to.
 #define initTip(tip_name)
 
 array_push(phone.tips, {
-	name: tip_name,
-	objs: [],
-	page_starts: [0]
+    name: tip_name,
+    objs: [],
+    page_starts: [0]
 });
 
 phone.currently_edited_obj = phone.tips[array_length(phone.tips) - 1];
@@ -718,18 +718,18 @@ initWords_ext("- " + tip_name + " -", fa_center, phone.apps[phone.APP_TIPS].colo
 #define initPatch(patch_version, patch_date)
 
 array_push(phone.patches, {
-	name: (patch_date == "" ? "" : "v") + patch_version,
-	objs: [],
-	page_starts: [0]
+    name: (patch_date == "" ? "" : "v") + patch_version,
+    objs: [],
+    page_starts: [0]
 });
 
 phone.currently_edited_obj = phone.patches[array_length(phone.patches) - 1];
 
 if patch_date == ""{
-	initWords_ext("- " + patch_version + " -", fa_center, phone.apps[phone.APP_PATCHES].color, 0, 0);
+    initWords_ext("- " + patch_version + " -", fa_center, phone.apps[phone.APP_PATCHES].color, 0, 0);
 }
 else{
-	initWords_ext("- v" + patch_version + ": " + patch_date + " -", fa_center, phone.apps[phone.APP_PATCHES].color, 0, 0);
+    initWords_ext("- v" + patch_version + ": " + patch_date + " -", fa_center, phone.apps[phone.APP_PATCHES].color, 0, 0);
 }
 
 #define initHeader(obj_text)
@@ -743,73 +743,73 @@ initWords_ext(obj_text, fa_left, c_white, 1, 0);
 #define initWords(obj_text)
 
 array_push(phone.currently_edited_obj.objs, {
-	type: 0,
-	text: obj_text,
-	align: fa_left,
-	color: c_white,
-	indent: 0,
-	side_by_side: false
+    type: 0,
+    text: obj_text,
+    align: fa_left,
+    color: c_white,
+    indent: 0,
+    side_by_side: false
 });
 
 #define initWords_ext(obj_text, obj_align, obj_color, obj_indent, obj_ignore_height)
 
 array_push(phone.currently_edited_obj.objs, {
-	type: 0,
-	text: obj_text,
-	align: obj_align,
-	color: obj_color,
-	indent: obj_indent,
-	side_by_side: obj_ignore_height
+    type: 0,
+    text: obj_text,
+    align: obj_align,
+    color: obj_color,
+    indent: obj_indent,
+    side_by_side: obj_ignore_height
 });
 
 #define initImage(obj_sprite, obj_frame)
 
 array_push(phone.currently_edited_obj.objs, {
-	type: 1,
-	sprite: obj_sprite,
-	frame: obj_frame,
-	align: fa_center,
-	xscale: 1,
-	yscale: 1,
-	uses_shader: 1,
-	color: c_white,
-	alpha: 1,
-	margin_l: noone,
-	margin_r: noone,
-	margin_u: noone,
-	margin_d: noone,
-	needs_auto_margins: true,
-	side_by_side: false
+    type: 1,
+    sprite: obj_sprite,
+    frame: obj_frame,
+    align: fa_center,
+    xscale: 1,
+    yscale: 1,
+    uses_shader: 1,
+    color: c_white,
+    alpha: 1,
+    margin_l: noone,
+    margin_r: noone,
+    margin_u: noone,
+    margin_d: noone,
+    needs_auto_margins: true,
+    side_by_side: false
 });
 
 #define initImage_ext(obj_sprite, obj_frame, obj_align, obj_xscale, obj_yscale, obj_uses_shader, obj_color, obj_alpha, obj_ignore_height, obj_l, obj_r, obj_u, obj_d)
 
 array_push(phone.currently_edited_obj.objs, {
-	type: 1,
-	sprite: obj_sprite,
-	frame: obj_frame,
-	align: obj_align,
-	xscale: obj_xscale,
-	yscale: obj_yscale,
-	uses_shader: obj_uses_shader,
-	color: obj_color,
-	alpha: obj_alpha,
-	margin_l: obj_l,
-	margin_r: obj_r,
-	margin_u: obj_u,
-	margin_d: obj_d,
-	needs_auto_margins: (obj_l == noone && obj_r == noone && obj_u == noone && obj_d == noone),
-	side_by_side: obj_ignore_height
+    type: 1,
+    sprite: obj_sprite,
+    frame: obj_frame,
+    align: obj_align,
+    xscale: obj_xscale,
+    yscale: obj_yscale,
+    uses_shader: obj_uses_shader,
+    color: obj_color,
+    alpha: obj_alpha,
+    margin_l: obj_l,
+    margin_r: obj_r,
+    margin_u: obj_u,
+    margin_d: obj_d,
+    needs_auto_margins: (obj_l == noone && obj_r == noone && obj_u == noone && obj_d == noone),
+    side_by_side: obj_ignore_height
 });
 
 #define initCheat(ch_name, ch_opt, ch_opt_name, ch_desc)
 
 array_push(phone.cheats, {
-	name: ch_name,
-	options: ch_opt,
-	option_names: ch_opt_name,
-	description: ch_desc,
-	on: 0
+    name: ch_name,
+    options: ch_opt,
+    option_names: ch_opt_name,
+    description: ch_desc,
+    on: 0
 });
 
 array_push(phone_cheats, ch_opt[0]);
@@ -819,15 +819,15 @@ return array_length(phone.cheats) - 1;
 #define initCFDHeader(text)
 
 array_push(phone.custom_fd_content, {
-	type: 0, // header
-	content: text
+    type: 0, // header
+    content: text
 });
 
 #define initCFDBody(text)
 
 array_push(phone.custom_fd_content, {
-	type: 1, // body
-	content: text
+    type: 1, // body
+    content: text
 });
 
 #define initCodec(cd_gimmick)
@@ -835,8 +835,8 @@ array_push(phone.custom_fd_content, {
 if "trummel_codecs" not in self trummel_codecs = [];
 
 var new_cdc = {
-	gimmick: cd_gimmick,
-	pages: []
+    gimmick: cd_gimmick,
+    pages: []
 };
 
 array_push(trummel_codecs, new_cdc);
@@ -844,10 +844,10 @@ array_push(trummel_codecs, new_cdc);
 #define initCodecPage(cd_speaker, cd_expression, cd_gimmick, cd_text)
 
 var new_page = {
-	speaker: cd_speaker,
-	expression: cd_expression,
-	gimmick: cd_gimmick,
-	text: cd_text
+    speaker: cd_speaker,
+    expression: cd_expression,
+    gimmick: cd_gimmick,
+    text: cd_text
 };
 
 array_push(trummel_codecs[array_length(trummel_codecs) - 1].pages, new_page);
@@ -857,8 +857,8 @@ array_push(trummel_codecs[array_length(trummel_codecs) - 1].pages, new_page);
 if "trummel_speakers" not in self trummel_speakers = [];
 
 trummel_speakers[idx] = {
-	name: speak_name,		// Name displayed while talking
-	sprite: speak_sprite	// Sprite of face
+    name: speak_name,		// Name displayed while talking
+    sprite: speak_sprite	// Sprite of face
 };
 
 return idx * -1;
@@ -866,22 +866,22 @@ return idx * -1;
 #define initCodecPit()
 
 with oPlayer if "ruber_pit" in self {
-	load_codecs = true;
+    load_codecs = true;
 }
 
 pit_codecs = [];
 
 var new_cdc = {
-	pages: []
+    pages: []
 };
 
 array_push(pit_codecs, new_cdc);
 
 #define initCodecPagePit(cd_speaker, cd_expression, cd_sfx, cd_text)
 var new_page = {
-	speaker: cd_speaker,
-	expression: cd_expression,
-	sfx: cd_sfx,
-	text: cd_text
+    speaker: cd_speaker,
+    expression: cd_expression,
+    sfx: cd_sfx,
+    text: cd_text
 };
 array_push(pit_codecs[array_length(pit_codecs) - 1].pages, new_page);

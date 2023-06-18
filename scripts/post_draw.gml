@@ -6,9 +6,9 @@ user_event(14);
 
 
 if phone_attacking && attack == AT_TAUNT_2{
-	shader_start();
-	draw_sprite_ext(sprite_get("handbert"), 0, x + (32 + ease_quintOut(256, 0, window_timer, phone_window_end)) * spr_dir, y - 22, 2 * -spr_dir, 2, 0, c_white, 1);
-	shader_end();
+    shader_start();
+    draw_sprite_ext(sprite_get("handbert"), 0, x + (32 + ease_quintOut(256, 0, window_timer, phone_window_end)) * spr_dir, y - 22, 2 * -spr_dir, 2, 0, c_white, 1);
+    shader_end();
 }
 
 
@@ -16,77 +16,77 @@ if phone_attacking && attack == AT_TAUNT_2{
 // code for kamehameha
 
 if phone_attacking && attack == AT_NSPECIAL{
-	if window == clamp(window, 4, 6){
-		// shader_start();
-		
-		if beam_clash_buddy != noone && state_timer % 60 < 30{
-			textDraw(x, y + 16, "fName", c_white, 100, 1000, fa_center, 1, true, 1, "Mash Special!!", false);
-		}
-		
-		var spr1 = sprite_get("nspecial_beam_start");
-		var spr2 = sprite_get("nspecial_beam_loop");
-		var spr3 = sprite_get("nspecial_beam_end");
-		
-		var length = beam_length;
-		var strength = clamp(floor(beam_juice / 50), 0, 2);
-		var frame = state_timer % 6 < 3;
-		var angle = beam_angle;
-		
-		var x1 = x + 72 * spr_dir;
-		var y1 = y - 24 + lengthdir_y(32, angle);
-		
-		switch((abs(lengthdir_y(1, beam_angle)) > abs(lengthdir_y(1, 15))) * sign(lengthdir_y(1, beam_angle))){
-			case 1: // down
-				x1 = x + 74 * spr_dir;
-				y1 = y - 6;
-				break;
-			case -1: // up
-				x1 = x + 60 * spr_dir;
-				y1 = y - 72;
-				break;
-		}
-		
-		var cur_x = x1;
-		var cur_y = y1;
-		
-		var ld_x = lengthdir_x(32, angle);
-		var ld_y = lengthdir_y(32, angle);
-		
-		for (var i = 0; i * 32 < length && cur_x == clamp(cur_x, 0, room_width); i++){
-			draw_sprite_ext(spr2, strength * 8 + ((i + state_timer) % 8), cur_x, cur_y, 1, 1, angle, c_white, 1);
-			cur_x += ld_x;
-			cur_y += ld_y;
-		}
-		// draw_sprite_part_ext(spr2, strength, 0, 0, length / 2, 128, x1, y1 - 64, spr_dir * 2, 1, c_white, 1);
-		draw_sprite_ext(spr1, strength * 2 + frame, x1, y1, 1, 1, angle, c_white, 1);
-		draw_sprite_ext(spr3, strength * 2 + frame, x1 + lengthdir_x(length, angle), y1 + lengthdir_y(length, angle), 1, 1, angle, c_white, 1);
-		
-		// shader_end();
-	}
-	else if window == 7{
-		var x1 = x + 72 * spr_dir;
-		var y1 = y - 24 + lengthdir_y(32, beam_angle);
-		
-		switch((abs(lengthdir_y(1, beam_angle)) > abs(lengthdir_y(1, 15))) * sign(lengthdir_y(1, beam_angle))){
-			case 1: // down
-				x1 = x + 74 * spr_dir;
-				y1 = y - 6;
-				break;
-			case -1: // up
-				x1 = x + 60 * spr_dir;
-				y1 = y - 72;
-				break;
-		}
-		
-		var length = beam_length / 2;
-		var frame = min(floor(6 * window_timer / phone_window_end), 5);
-		var angle = beam_angle;
-		
-		x1 -= lengthdir_x(40, angle)
-		y1 -= lengthdir_y(40, angle)
-		
-		draw_sprite_ext(sprite_get("nspecial_beam_fade"), frame, x1, y1, length, 1, angle, c_white, 1)
-	}
+    if window == clamp(window, 4, 6){
+        // shader_start();
+        
+        if beam_clash_buddy != noone && state_timer % 60 < 30{
+            textDraw(x, y + 16, "fName", c_white, 100, 1000, fa_center, 1, true, 1, "Mash Special!!", false);
+        }
+        
+        var spr1 = sprite_get("nspecial_beam_start");
+        var spr2 = sprite_get("nspecial_beam_loop");
+        var spr3 = sprite_get("nspecial_beam_end");
+        
+        var length = beam_length;
+        var strength = clamp(floor(beam_juice / 50), 0, 2);
+        var frame = state_timer % 6 < 3;
+        var angle = beam_angle;
+        
+        var x1 = x + 72 * spr_dir;
+        var y1 = y - 24 + lengthdir_y(32, angle);
+        
+        switch((abs(lengthdir_y(1, beam_angle)) > abs(lengthdir_y(1, 15))) * sign(lengthdir_y(1, beam_angle))){
+            case 1: // down
+                x1 = x + 74 * spr_dir;
+                y1 = y - 6;
+                break;
+            case -1: // up
+                x1 = x + 60 * spr_dir;
+                y1 = y - 72;
+                break;
+        }
+        
+        var cur_x = x1;
+        var cur_y = y1;
+        
+        var ld_x = lengthdir_x(32, angle);
+        var ld_y = lengthdir_y(32, angle);
+        
+        for (var i = 0; i * 32 < length && cur_x == clamp(cur_x, 0, room_width); i++){
+            draw_sprite_ext(spr2, strength * 8 + ((i + state_timer) % 8), cur_x, cur_y, 1, 1, angle, c_white, 1);
+            cur_x += ld_x;
+            cur_y += ld_y;
+        }
+        // draw_sprite_part_ext(spr2, strength, 0, 0, length / 2, 128, x1, y1 - 64, spr_dir * 2, 1, c_white, 1);
+        draw_sprite_ext(spr1, strength * 2 + frame, x1, y1, 1, 1, angle, c_white, 1);
+        draw_sprite_ext(spr3, strength * 2 + frame, x1 + lengthdir_x(length, angle), y1 + lengthdir_y(length, angle), 1, 1, angle, c_white, 1);
+        
+        // shader_end();
+    }
+    else if window == 7{
+        var x1 = x + 72 * spr_dir;
+        var y1 = y - 24 + lengthdir_y(32, beam_angle);
+        
+        switch((abs(lengthdir_y(1, beam_angle)) > abs(lengthdir_y(1, 15))) * sign(lengthdir_y(1, beam_angle))){
+            case 1: // down
+                x1 = x + 74 * spr_dir;
+                y1 = y - 6;
+                break;
+            case -1: // up
+                x1 = x + 60 * spr_dir;
+                y1 = y - 72;
+                break;
+        }
+        
+        var length = beam_length / 2;
+        var frame = min(floor(6 * window_timer / phone_window_end), 5);
+        var angle = beam_angle;
+        
+        x1 -= lengthdir_x(40, angle)
+        y1 -= lengthdir_y(40, angle)
+        
+        draw_sprite_ext(sprite_get("nspecial_beam_fade"), frame, x1, y1, length, 1, angle, c_white, 1)
+    }
 }
 
 

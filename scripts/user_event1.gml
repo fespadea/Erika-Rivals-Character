@@ -40,9 +40,9 @@ if (x_dist == 0) {
     var target_arc_length = chain_length / chain_segments;
 
     end_iter = chain_segments - 1;
-	chain_x_positions = array_create(chain_segments, 0);
-	chain_y_positions = array_create(chain_segments, 0);
-	chain_angles = array_create(chain_segments, 0);
+    chain_x_positions = array_create(chain_segments, 0);
+    chain_y_positions = array_create(chain_segments, 0);
+    chain_angles = array_create(chain_segments, 0);
     for (var i = 0; i < chain_segments; i++) {
         var start_arc = arclength(start_x, a, vertex_x);
         var new_arc = start_arc;

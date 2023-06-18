@@ -50,7 +50,7 @@ reading, since there are other important steps.
 
 1. Navigate to
 
-	Program Files (x86)/Steam/steamapps/workshop/content/383980
+    Program Files (x86)/Steam/steamapps/workshop/content/383980
 
 (...you must have already done that if you're reading this, right?)
 
@@ -59,7 +59,7 @@ end of the mod's Steam URL.
 
 2. Copy it to
 
-	Appdata/Local/RivalsofAether/workshop/
+    Appdata/Local/RivalsofAether/workshop/
 
 and feel free to change the name of the folder you just copied.
 
@@ -96,20 +96,20 @@ value used to be before it got nerfed.
 character, and want to add the MunoPhone to that character. If you're starting
 from scratch, skip this part!
 
-	NOTE:
-	
-	It's possible that your character has the OLD version of the MunoPhone
-	installed (the green flip-phone). If that's the case, please refer to the
-	old _readme.gml and follow its existing-character installation guide in
-	reverse - remove all of the files and code it tells you to add.
-	
-	You should NOT DELETE your user_event15.gml, since that has all of your
-	custom Tips and such. However, you'll need to rename it or move it
-	somewhere else, since ultimately it'll need to be replaced with the
-	MunoPhone Touch's user_event15.gml (the format of the file has changed
-	compared to the old MunoPhone). Please see the last section of this readme
-	for instructions on transferring your content to the new user_event15, after
-	you've finished the rest of the readme!
+    NOTE:
+    
+    It's possible that your character has the OLD version of the MunoPhone
+    installed (the green flip-phone). If that's the case, please refer to the
+    old _readme.gml and follow its existing-character installation guide in
+    reverse - remove all of the files and code it tells you to add.
+    
+    You should NOT DELETE your user_event15.gml, since that has all of your
+    custom Tips and such. However, you'll need to rename it or move it
+    somewhere else, since ultimately it'll need to be replaced with the
+    MunoPhone Touch's user_event15.gml (the format of the file has changed
+    compared to the old MunoPhone). Please see the last section of this readme
+    for instructions on transferring your content to the new user_event15, after
+    you've finished the rest of the readme!
 
 As for installing the MunoPhone Touch...
 
@@ -131,33 +131,33 @@ allow the MunoPhone to run code at certain moments:
 
 at the bottom of init.gml:
 
-	muno_event_type = 0;
-	user_event(14);
+    muno_event_type = 0;
+    user_event(14);
 
 at the top of update.gml:
 
-	muno_event_type = 1;
-	user_event(14);
+    muno_event_type = 1;
+    user_event(14);
 
 at the bottom of set_attack.gml:
 
-	muno_event_type = 2;
-	user_event(14);
+    muno_event_type = 2;
+    user_event(14);
 
 at the top of post_draw.gml: (yes, it skips the "3")
 
-	muno_event_type = 4;
-	user_event(14);
+    muno_event_type = 4;
+    user_event(14);
 
 at the bottom of draw_hud.gml:
 
-	muno_event_type = 5;
-	user_event(14);
-	
+    muno_event_type = 5;
+    user_event(14);
+    
 in css_draw.gml (ideal order of code depends on what else you have in there):
-	
-	muno_event_type = 6;
-	user_event(14);
+    
+    muno_event_type = 6;
+    user_event(14);
 
 NOTE: "at the bottom" means BEFORE any #define lines, if you have them.
 
@@ -226,19 +226,19 @@ follow good practices when programming windows and hitboxes. Here are some
 guidelines, which you should follow in general (not only because of the
 MunoPhone):
 
-	Startup, active frames, and ending lag should be segregated by distinct
-	breaks in windows. If a move is active on frames 4-10, then the active
-	window should last 7 frames, after a 3 frame startup window.
-	
-	Each hitbox should have its OWN window, and gaps between hitboxes should
-	correspond to gaps between active windows.
-	
-	Whifflag should be applied to ALL endlag windows, except for moves which
-	lack any melee hitboxes... or Specials, which traditionally do not have
-	whifflag in RoA.
-	
-	Simplify windows as much as possible while following the above guidelines.
-	Don't add tons of windows for no reason.
+    Startup, active frames, and ending lag should be segregated by distinct
+    breaks in windows. If a move is active on frames 4-10, then the active
+    window should last 7 frames, after a 3 frame startup window.
+    
+    Each hitbox should have its OWN window, and gaps between hitboxes should
+    correspond to gaps between active windows.
+    
+    Whifflag should be applied to ALL endlag windows, except for moves which
+    lack any melee hitboxes... or Specials, which traditionally do not have
+    whifflag in RoA.
+    
+    Simplify windows as much as possible while following the above guidelines.
+    Don't add tons of windows for no reason.
 
 */
 
@@ -268,13 +268,13 @@ character dev, can disable certain visual effects when Fast Graphics activates.
 To use Fast Graphics, first, enable it in user_event15.gml. Then, in your code,
 reference the phone_fast variable. For example:
 
-	// attack_update.gml
-	
-	if (attack == AT_USPECIAL && window == 2 && window_timer == 1){
-		if !phone_fast{
-			spawn_hit_fx(x, y, vfx_uspecial_start);
-		}
-	}
+    // attack_update.gml
+    
+    if (attack == AT_USPECIAL && window == 2 && window_timer == 1){
+        if !phone_fast{
+            spawn_hit_fx(x, y, vfx_uspecial_start);
+        }
+    }
 
 This may help alleviate lag on lower-end machines. P.S. In Practice Mode, use
 the Utilites app to toggle Fast Graphics.
@@ -283,20 +283,20 @@ Fast Graphics is the most useful Utilities option, so it has its own keyword
 (phone_fast). For the rest, you'll need to directly access the phone's data
 arrays, like this:
 
-	// update.gml
-	
-	if phone.utils_cur[phone.UTIL_GREEN]{
-		print("The greenscreen is currently enabled.");
-	}
-	
-	if phone.utils_cur_updated[phone.UTIL_GREEN]{
-		if phone.utils_cur[phone.UTIL_GREEN]{
-			print("The user just turned on the greenscreen.");
-		}
-		else{
-			print("The user just turned off the greenscreen.");
-		}
-	}
+    // update.gml
+    
+    if phone.utils_cur[phone.UTIL_GREEN]{
+        print("The greenscreen is currently enabled.");
+    }
+    
+    if phone.utils_cur_updated[phone.UTIL_GREEN]{
+        if phone.utils_cur[phone.UTIL_GREEN]{
+            print("The user just turned on the greenscreen.");
+        }
+        else{
+            print("The user just turned off the greenscreen.");
+        }
+    }
 
 These arrays are very similar to the ones used for Cheats.
 
@@ -335,7 +335,7 @@ old event15.
 Removed features:
 - Character Compatibility icons
 - Character Compatibility templates for non-Muno characters
-	- just move these outside of user_event15
+    - just move these outside of user_event15
 - phone.taunt_hint_x and phone.taunt_hint_y
 - phone_custom_debug
 
@@ -345,108 +345,108 @@ remember to fill out the NEW fields that weren't there before.
 
 Compatibility Setup --> CSS Draw
 
-	Copy the values of these vars from the old file to the new file, if needed:
-	- num_alts
+    Copy the values of these vars from the old file to the new file, if needed:
+    - num_alts
 
 General Character Info --> General Settings
 
-	Copy the values of these vars from the old file to the new file, if needed:
-	- muno_char_name
-	- muno_char_icon
-	- phone.dont_fast
-	- phone.lightweight
-	
-	Copy the value of the old file's phone.shader to the new file's
-	phone.uses_shader, if needed.
+    Copy the values of these vars from the old file to the new file, if needed:
+    - muno_char_name
+    - muno_char_icon
+    - phone.dont_fast
+    - phone.lightweight
+    
+    Copy the value of the old file's phone.shader to the new file's
+    phone.uses_shader, if needed.
 
 Tips --> Tips
 
-	This is one area where the syntax has changed a bit. First, the Tips section
-	should no longer be wrapped in a "with phone{}", like it was in the old
-	MunoPhone.
-	
-	Secondly, the syntax has changed a bit. Here is a comparison of the old and
-	new functions:
-	
-		OLD: initTipWords(text)
-		NEW: initWords(text)
-		
-		OLD: initTipWords_ext(text, align, color, indent, gimmick)
-		NEW: initWords_ext(text, alignment, color, indent, ignore_height)
-		
-		OLD: initTipImage(sprite, frame, align, xscale, color, gimmick)
-		NEW: initImage(sprite, frame)
-		
-		OLD: initTipImage_ext(sprite, frame, align, xscale, color, gimmick,
-			border_l, border_r, border_u, border_d)
-		NEW: initImage_ext(sprite, frame, alignment, xscale, yscale,
-			uses_shader, color, alpha, ignore_height, crop_left, crop_right,
-			crop_up, crop_down)
-	
-	Notes:
-	- Paragraph/image gimmicks have been removed, but a couple of them have been
-		promoted to their own arguments.
-	- initImage() takes fewer arguments, defaulting to center-align.
-	- border_l and crop_left (etc) are the same thing.
-	- initImage() and initImage_ext() can now take sprite_get() directly,
-		instead of needing a proxy var like the old phone.
-	- Consider using the new initHeader() and initSection() where convenient.
-	
-	Copy your old Tips into the new event15 while editing the syntax to match
-	the above changes. Smart use of find-and-replace is recommended.
+    This is one area where the syntax has changed a bit. First, the Tips section
+    should no longer be wrapped in a "with phone{}", like it was in the old
+    MunoPhone.
+    
+    Secondly, the syntax has changed a bit. Here is a comparison of the old and
+    new functions:
+    
+        OLD: initTipWords(text)
+        NEW: initWords(text)
+        
+        OLD: initTipWords_ext(text, align, color, indent, gimmick)
+        NEW: initWords_ext(text, alignment, color, indent, ignore_height)
+        
+        OLD: initTipImage(sprite, frame, align, xscale, color, gimmick)
+        NEW: initImage(sprite, frame)
+        
+        OLD: initTipImage_ext(sprite, frame, align, xscale, color, gimmick,
+            border_l, border_r, border_u, border_d)
+        NEW: initImage_ext(sprite, frame, alignment, xscale, yscale,
+            uses_shader, color, alpha, ignore_height, crop_left, crop_right,
+            crop_up, crop_down)
+    
+    Notes:
+    - Paragraph/image gimmicks have been removed, but a couple of them have been
+        promoted to their own arguments.
+    - initImage() takes fewer arguments, defaulting to center-align.
+    - border_l and crop_left (etc) are the same thing.
+    - initImage() and initImage_ext() can now take sprite_get() directly,
+        instead of needing a proxy var like the old phone.
+    - Consider using the new initHeader() and initSection() where convenient.
+    
+    Copy your old Tips into the new event15 while editing the syntax to match
+    the above changes. Smart use of find-and-replace is recommended.
 
 Patch Notes --> Patches
 
-	These have seen largely the same changes as Tips, and these two apps now use
-	the same generic content functions (instead of having both initPatchWords()
-	and initTipWords(), there's now just initWords(); etc).
-	
-	It is strongly recommended to use initHeader() and initSection() when
-	writing Patches.
-	
-	Also, note that the Patches app is the new home of the old About app's
-	content. It's recommended to just start the Abouts from scratch (edit the
-	new template and copy over your old text).
+    These have seen largely the same changes as Tips, and these two apps now use
+    the same generic content functions (instead of having both initPatchWords()
+    and initTipWords(), there's now just initWords(); etc).
+    
+    It is strongly recommended to use initHeader() and initSection() when
+    writing Patches.
+    
+    Also, note that the Patches app is the new home of the old About app's
+    content. It's recommended to just start the Abouts from scratch (edit the
+    new template and copy over your old text).
 
 Cheat Codes --> Cheats
 
-	The syntax for these has been slightly changed.
-	
-	Syntax comparison:
-	
-		OLD: initCheat(display name, backstage name, [options], [option names],
-			description)
-		
-		NEW: CHEAT_[NAME_HERE] = initCheat(name, [options], [option_names],
-			description)
-	
-	The "backstage name" is no longer an argument of the function. Instead, the
-	function *returns* the ID of the Cheat, and then you save that into a
-	variable directly.
-	
-	In other words, you take the second argument from the old function, remote
-	it, stick it in front without the quotation marks, and add an equals sign.
-	
-	Aside from this, you can copy the Cheats over verbatim.
+    The syntax for these has been slightly changed.
+    
+    Syntax comparison:
+    
+        OLD: initCheat(display name, backstage name, [options], [option names],
+            description)
+        
+        NEW: CHEAT_[NAME_HERE] = initCheat(name, [options], [option_names],
+            description)
+    
+    The "backstage name" is no longer an argument of the function. Instead, the
+    function *returns* the ID of the Cheat, and then you save that into a
+    variable directly.
+    
+    In other words, you take the second argument from the old function, remote
+    it, stick it in front without the quotation marks, and add an equals sign.
+    
+    Aside from this, you can copy the Cheats over verbatim.
 
 Frame Data Guide --> Frame Data
 
-	Copy the values of these vars from the old file to the new file, if needed:
-	- phone.move_ordering
-	- phone.include_stats
-	- phone.stats_notes
-	- phone.include_custom
-	- phone.custom_name
-	
-	You can also copy the initCFDHeader() and initCFDBody() calls from the old
-	file to the new one. Keep in mind that the layout of the custom data page is
-	different compared to the old phone, and is more suited for very short
-	headers / descriptions (usually numbers).
-	
+    Copy the values of these vars from the old file to the new file, if needed:
+    - phone.move_ordering
+    - phone.include_stats
+    - phone.stats_notes
+    - phone.include_custom
+    - phone.custom_name
+    
+    You can also copy the initCFDHeader() and initCFDBody() calls from the old
+    file to the new one. Keep in mind that the layout of the custom data page is
+    different compared to the old phone, and is more suited for very short
+    headers / descriptions (usually numbers).
+    
 Compatibility --> Muno Character Compatibility
 
-	The compatibility templates for Trummel codecs, Otto bobbleheads, and Steve
-	death messages can be copied over verbatim.
+    The compatibility templates for Trummel codecs, Otto bobbleheads, and Steve
+    death messages can be copied over verbatim.
 */
 
 

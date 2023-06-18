@@ -3,12 +3,12 @@
 can_be_grounded = false;
 ignores_walls = true;
 uses_shader = true;
-owner_id = player_id;
 tethered_id = player_id.hit_player_obj;
-depth = min(owner_id.depth, tethered_id.depth) - 1;
+depth = min(player_id.depth, tethered_id.depth) - 1;
 chainLinkSprite = sprite_get("chain_link");
 
 normalChainLength = player_id.DEFAULT_CHAIN_LENGTH;
+chainMaxTension = player_id.CHAIN_MAX_TENSION;
 maxChainLength = normalChainLength + player_id.DEFAULT_STRETCH_AMOUNT;
 adjustedChainSpriteWidth = sprite_get_width(chainLinkSprite) - 3;
 numChainSegments = ceil(maxChainLength / adjustedChainSpriteWidth);
