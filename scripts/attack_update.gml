@@ -18,6 +18,17 @@ switch(attack){
     
     case AT_JAB:
         was_parried = false; // easy method for single-hit jabs
+        if window == 3 && attack_pressed {
+            window = 5;
+            window_timer = 0;
+        } else if window == 7 && attack_pressed && hitWithJab2 {
+            window = 9;
+            window_timer = 0;
+        } else if window == 4 && window_timer == get_window_value(AT_JAB, 4, AG_WINDOW_LENGTH) - 1 {
+            window = 11;
+        } else if window == 8 && window_timer == get_window_value(AT_JAB, 8, AG_WINDOW_LENGTH) - 1 {
+            window = 11;
+        }
     case AT_FTILT:
     case AT_DTILT:
         if window == 1 && window_timer == phone_window_end{

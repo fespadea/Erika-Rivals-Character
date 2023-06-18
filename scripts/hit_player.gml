@@ -1,3 +1,7 @@
+if my_hitboxID.attack == AT_JAB && my_hitboxID.hbox_num != 1 {
+    hitWithJab2 = true;
+}
+
 // code for kamehameha
 
 if my_hitboxID.attack == AT_NSPECIAL && !has_updated_beam_kb{

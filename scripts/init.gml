@@ -182,6 +182,7 @@ bubble_y = 8;
 
 my_chains = ds_list_create();
 my_tape = ds_list_create();
+hitWithJab2 = false;
 
 DEFAULT_CHAIN_LENGTH = 200;
 DEFAULT_STRETCH_AMOUNT = 100;

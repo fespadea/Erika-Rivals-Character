@@ -1,6 +1,8 @@
 ///#args attack // this line makes code editors not freak out for some reason
 
-
+if attack == AT_JAB {
+    hitWithJab2 = false;
+}
 
 // MunoPhone Touch code - don't touch
 // should be at BOTTOM of file, but above any #define lines
